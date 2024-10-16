@@ -6,10 +6,10 @@ const EmployeeAttendance = () => {
   const [showModal, setShowModal] = useState(false);
   const employeeId = localStorage.getItem('id'); // Replace with actual employee ID
   const employeeName = localStorage.getItem('empName'); 
-
+  //http://localhost:8080
   const handleClockIn = async () => {
     try {
-      const response = await axios.post('http://localhost:8080/api/attendance/clock-in', null, {
+      const response = await axios.post('https://employee-management-system-4oo9.onrender.com/api/attendance/clock-in', null, {
         params: {
           employeeId: employeeId,
           employeeName: employeeName,
@@ -23,10 +23,10 @@ const EmployeeAttendance = () => {
       setShowModal(true);
     }
   };
-
+  //http://localhost:8080
   const handleClockOut = async () => {
     try {
-      const response = await axios.post('http://localhost:8080/api/attendance/clock-out', null, {
+      const response = await axios.post('https://employee-management-system-4oo9.onrender.com/api/attendance/clock-out', null, {
         params: {
           employeeId: employeeId,
         }

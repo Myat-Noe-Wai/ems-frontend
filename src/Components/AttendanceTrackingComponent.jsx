@@ -11,10 +11,10 @@ const AttendanceTrackingComponent = () => {
     useEffect(() => {
         fetchAttendanceRecords();
     }, []);
-
+    //http://localhost:8080
     const fetchAttendanceRecords = async () => {
         try {
-        const response = await axios.get('http://localhost:8080/api/attendance');
+        const response = await axios.get('https://employee-management-system-4oo9.onrender.com/api/attendance');
         setAttendanceRecords(response.data);
         } catch (error) {
         console.error('Error fetching attendance records:', error);

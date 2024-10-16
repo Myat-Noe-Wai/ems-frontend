@@ -7,19 +7,19 @@ const LeaveRequests = () => {
   useEffect(() => {
     fetchLeaveRequests();
   }, []);
-
+  //http://localhost:8080
   const fetchLeaveRequests = async () => {
-    const response = await axios.get('http://localhost:8080/api/leave-requests');
+    const response = await axios.get('https://employee-management-system-4oo9.onrender.com/api/leave-requests');
     setLeaveRequests(response.data);
   };
 
   const handleApprove = async (id) => {
-    await axios.put(`http://localhost:8080/api/leave-requests/${id}/approve`);
+    await axios.put(`https://employee-management-system-4oo9.onrender.com/api/leave-requests/${id}/approve`);
     fetchLeaveRequests();
   };
 
   const handleReject = async (id) => {
-    await axios.put(`http://localhost:8080/api/leave-requests/${id}/reject`);
+    await axios.put(`https://employee-management-system-4oo9.onrender.com/api/leave-requests/${id}/reject`);
     fetchLeaveRequests();
   };
 

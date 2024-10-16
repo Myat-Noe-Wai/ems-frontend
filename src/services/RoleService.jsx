@@ -1,5 +1,5 @@
 import axios from 'axios';
-const ROLE_API_BASE_URL = "http://localhost:8080/api/roles";
+const ROLE_API_BASE_URL = "https://employee-management-system-4oo9.onrender.com/api/roles";
 class RoleService{
     getRoles(){
         return axios.get(ROLE_API_BASE_URL);

@@ -7,11 +7,11 @@ function Register() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-
+    //http://localhost:8080
     async function save(event) {
         event.preventDefault();
         try {
-          await axios.post("http://localhost:8080/api/v1/user/save", {
+          await axios.post("https://employee-management-system-4oo9.onrender.com/api/v1/user/save", {
           employeename: employeename,
           email: email,
           password: password,
