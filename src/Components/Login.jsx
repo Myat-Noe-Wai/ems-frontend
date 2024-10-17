@@ -6,11 +6,12 @@ function Login({ setIsAuthenticated }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  //http://localhost:8080
+  
   async function login(event) {
     event.preventDefault();
     try {
       await axios.post("https://employee-management-system-4oo9.onrender.com/api/v1/user/login", {
+      // await axios.post("http://localhost:8080/api/v1/user/login", {
         email: email,
         password: password,
       }).then((res) => {

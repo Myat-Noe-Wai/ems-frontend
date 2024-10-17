@@ -15,10 +15,11 @@ const EmployeeLeaveRequest = () => {
   useEffect(() => {
     fetchLeaveHistory(employeeId);
   }, []);
-  //http://localhost:8080
+  
   const fetchLeaveHistory = async (employeeId) => {
     try {
-      const response = await axios.get(`https://employee-management-system-4oo9.onrender.com/api/leave-requests/employee/${employeeId}`); // Adjust the endpoint based on your backend
+      const response = await axios.get(`https://employee-management-system-4oo9.onrender.com/api/leave-requests/employee/${employeeId}`);
+      // const response = await axios.get(`http://localhost:8080/api/leave-requests/employee/${employeeId}`);
       console.log("response");
       console.log(response);
       setLeaveHistory(response.data);
@@ -35,9 +36,10 @@ const EmployeeLeaveRequest = () => {
       reason,
       employeeId: 1, // Adjust this to get the logged-in employee's ID dynamically
     };
-    //http://localhost:8080
+    
     try {
       const response = await axios.post('https://employee-management-system-4oo9.onrender.com/api/leave-requests/apply', leaveRequest);
+      // const response = await axios.post('http://localhost:8080/api/leave-requests/apply', leaveRequest);
       setMessage('Leave applied successfully');
       fetchLeaveHistory(); // Refresh history after successful application
     } catch (error) {
