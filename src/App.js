@@ -68,63 +68,63 @@ function App() {
                       }/>
                       <Route path="/" element={
                         <>
-                          <HeaderComponent />
+                          <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
                           <HomeComponent />
                           <FooterComponent />
                         </>
                       }/>
                     <Route path="/roles" element={
                         <>
-                          <HeaderComponent />
+                          <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
                           <RoleManagement />
                           <FooterComponent />
                         </>
                       }/>
                     <Route path="/employees" element={
                         <>
-                          <HeaderComponent />
+                          <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole} />
                           <ListEmployeeComponent />
                           <FooterComponent />
                         </>
                       }/>
                     <Route path="/add-employee" element={
                         <>
-                          <HeaderComponent />
+                          <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
                           <CreateEmployeeComponent />
                           <FooterComponent />
                         </>
                       }/>
                     <Route path="/update-employee/:id" element={
                         <>
-                          <HeaderComponent />
+                          <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
                           <UpdateEmployeeComponent />
                           <FooterComponent />
                         </>
                       }/>
                     <Route path="/view-employee/:id" element={
                         <>
-                          <HeaderComponent />
+                          <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
                           <ViewEmployeeComponent />
                           <FooterComponent />
                         </>
                       }/>
                     <Route path="/attendance" element={
                         <>
-                          <HeaderComponent />
+                          <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
                           <AttendanceTrackingComponent />
                           <FooterComponent />
                         </>
                       }/>
                     <Route path="/leave-request" element={
                         <>
-                          <HeaderComponent />
+                          <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
                           <LeaveRequest />
                           <FooterComponent />
                         </>
                       }/>
                     <Route path="/employee-attendance" element={
                         <>
-                          <HeaderComponent />
+                          <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
                           <EmployeeAttendance />
                           <FooterComponent />
                         </>
@@ -142,7 +142,7 @@ function App() {
                       }/>
                       <Route path="/" element={
                         <>
-                          <EmpHeaderComponent />
+                          <EmpHeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
                           <EmpHomeComponent />
                           <FooterComponent />
                         </>
@@ -156,7 +156,7 @@ function App() {
                       }/>
                       <Route path="/request-leave" element={
                         <>
-                          <EmpHeaderComponent />
+                          <EmpHeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
                           <EmployeeLeaveRequest />
                           <FooterComponent />
                         </>

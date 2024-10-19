@@ -10,6 +10,8 @@ const EmployeeLeaveRequest = () => {
   const [message, setMessage] = useState('');
   const [leaveHistory, setLeaveHistory] = useState([]);
   const employeeId = localStorage.getItem('id');
+  console.log("empId ****");
+  console.log(employeeId);
 
   // Fetch leave history for the logged-in employee
   useEffect(() => {
@@ -34,8 +36,12 @@ const EmployeeLeaveRequest = () => {
       startDate,
       endDate,
       reason,
-      employeeId: 1, // Adjust this to get the logged-in employee's ID dynamically
+      employee: {
+        id: employeeId
+     }
     };
+    console.log("leaveRequest");
+    console.log(leaveRequest);
     
     try {
       const response = await axios.post('https://employee-management-system-4oo9.onrender.com/api/leave-requests/apply', leaveRequest);
