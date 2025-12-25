@@ -20,8 +20,9 @@ const EmployeeLeaveRequest = () => {
   
   const fetchLeaveHistory = async (employeeId) => {
     try {
-      const response = await axios.get(`https://employee-management-system-4oo9.onrender.com/api/leave-requests/employee/${employeeId}`);
-      // const response = await axios.get(`http://localhost:8080/api/leave-requests/employee/${employeeId}`);
+      // const response = await axios.get(`https://employee-management-system-4oo9.onrender.com/api/leave-requests/employee/${employeeId}`);
+      const response = await axios.get(`http://localhost:8081/api/leave-requests/employee/${employeeId}`);
+      // const response = await axios.get(`http://13.61.161.105/api/leave-requests/employee/${employeeId}`);
       console.log("response");
       console.log(response);
       setLeaveHistory(response.data);
@@ -44,8 +45,9 @@ const EmployeeLeaveRequest = () => {
     console.log(leaveRequest);
     
     try {
-      const response = await axios.post('https://employee-management-system-4oo9.onrender.com/api/leave-requests/apply', leaveRequest);
-      // const response = await axios.post('http://localhost:8080/api/leave-requests/apply', leaveRequest);
+      // const response = await axios.post('https://employee-management-system-4oo9.onrender.com/api/leave-requests/apply', leaveRequest);
+      const response = await axios.post('http://localhost:8081/api/leave-requests/apply', leaveRequest);
+      // const response = await axios.post('http://13.61.161.105/api/leave-requests/apply', leaveRequest);
       setMessage('Leave applied successfully');
       fetchLeaveHistory(); // Refresh history after successful application
     } catch (error) {

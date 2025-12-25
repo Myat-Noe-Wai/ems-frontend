@@ -57,10 +57,10 @@ const HeaderComponent = ({ setIsAuthenticated, setRole }) => {
                             <a
                                 className="nav-link"
                                 href="#"
-                                onClick={() => handleLinkClick('/roles')}
-                                style={{ fontWeight: activeLink === '/roles' ? 'bold' : 'normal', color: "white" }}
+                                onClick={() => handleLinkClick('/jobtitles')}
+                                style={{ fontWeight: activeLink === '/jobtitles' ? 'bold' : 'normal', color: "white" }}
                             >
-                                Manage Role
+                                Manage Job Titles
                             </a>
                         </li>
                         <li className="nav-item">

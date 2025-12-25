@@ -9,7 +9,7 @@ import UpdateEmployeeComponent from './Components/UpdateEmployeeComponent';
 import HomeComponent from './Components/HomeComponent';
 import EmpHomeComponent from './Components/EmpHomeComponent';
 import {BrowserRouter as Router, Route, Routes, Navigate} from 'react-router-dom';
-import RoleManagement from './Components/RoleManagement';
+import JobTitleManagement from './Components/JobTitleManagement';
 import AttendanceTrackingComponent from './Components/AttendanceTrackingComponent';
 import LeaveRequest from './Components/LeaveRequest';
 import EmployeeAttendance from './Components/EmployeeAttendance';
@@ -73,10 +73,10 @@ function App() {
                           <FooterComponent />
                         </>
                       }/>
-                    <Route path="/roles" element={
+                    <Route path="/jobtitles" element={
                         <>
                           <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
-                          <RoleManagement />
+                          <JobTitleManagement />
                           <FooterComponent />
                         </>
                       }/>

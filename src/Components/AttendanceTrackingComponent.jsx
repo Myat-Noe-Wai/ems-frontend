@@ -14,8 +14,9 @@ const AttendanceTrackingComponent = () => {
 
     const fetchAttendanceRecords = async () => {
         try {
-        const response = await axios.get('https://employee-management-system-4oo9.onrender.com/api/attendance');
-        // const response = await axios.get('http://localhost:8080/api/attendance');
+        // const response = await axios.get('https://employee-management-system-4oo9.onrender.com/api/attendance');
+        const response = await axios.get('http://localhost:8081/api/attendance');
+        // const response = await axios.get('http://13.61.161.105/api/attendance');
         setAttendanceRecords(response.data);
         } catch (error) {
         console.error('Error fetching attendance records:', error);

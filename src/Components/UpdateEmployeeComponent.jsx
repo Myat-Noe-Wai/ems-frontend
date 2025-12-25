@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import EmployeeService from '../services/EmployeeService';
-import RoleService from '../services/RoleService';
+import JobTitleService from '../services/JobTitleService';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const UpdateEmployeeComponent = () => {
@@ -35,7 +35,7 @@ const UpdateEmployeeComponent = () => {
             setSelectedRole(employee.role);
         });
 
-        RoleService.getRoles().then((res) => {
+        JobTitleService.getRoles().then((res) => {
             if (Array.isArray(res.data)) {
                 setRoles(res.data);
             } else {

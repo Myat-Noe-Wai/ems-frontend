@@ -9,8 +9,9 @@ const EmployeeAttendance = () => {
   
   const handleClockIn = async () => {
     try {
-      const response = await axios.post('https://employee-management-system-4oo9.onrender.com/api/attendance/clock-in', null, {
-      // const response = await axios.post('http://localhost:8080/api/attendance/clock-in', null, {
+      // const response = await axios.post('https://employee-management-system-4oo9.onrender.com/api/attendance/clock-in', null, {      
+      const response = await axios.post('http://localhost:8081/api/attendance/clock-in', null, {
+      // const response = await axios.post('http://13.61.161.105/api/attendance/clock-in', null, {
         params: {
           employeeId: employeeId,
           employeeName: employeeName,
@@ -27,8 +28,9 @@ const EmployeeAttendance = () => {
   
   const handleClockOut = async () => {
     try {
-      const response = await axios.post('https://employee-management-system-4oo9.onrender.com/api/attendance/clock-out', null, {
-      // const response = await axios.post('http://localhost:8080/api/attendance/clock-out', null, {
+      // const response = await axios.post('https://employee-management-system-4oo9.onrender.com/api/attendance/clock-out', null, {
+        const response = await axios.post('http://localhost:8081/api/attendance/clock-out', null, {
+      // const response = await axios.post('http://13.61.161.105/api/attendance/clock-out', null, {
         params: {
           employeeId: employeeId,
         }

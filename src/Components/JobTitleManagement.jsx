@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import RoleService from '../services/RoleService';
+import JobTitleService from '../services/JobTitleService';
 import { useNavigate } from 'react-router-dom';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
-function RoleManagement() {
+function JobTitleManagement() {
   const navigate = useNavigate();
   const [roles, setRoles] = useState([]);
   const [name, setRoleName] = useState('');
@@ -12,7 +12,7 @@ function RoleManagement() {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    RoleService.getRoles().then((res) => {
+    JobTitleService.getRoles().then((res) => {
       if (Array.isArray(res.data)) {
         setRoles(res.data);
       } else {
@@ -32,9 +32,9 @@ function RoleManagement() {
     let role = { name, description };
 
     if (editingRoleId) {
-      RoleService.updateRole(role, editingRoleId).then(res => {
+      JobTitleService.updateRole(role, editingRoleId).then(res => {
         console.log('role => ' + JSON.stringify(role));
-        RoleService.getRoles().then((res) => {
+        JobTitleService.getRoles().then((res) => {
           if (Array.isArray(res.data)) {
             setRoles(res.data);
           } else {
@@ -52,8 +52,8 @@ function RoleManagement() {
         console.error("Error updating role: ", err);
       });
     } else {
-      RoleService.createRole(role).then(res => {
-        RoleService.getRoles().then((res) => {
+      JobTitleService.createRole(role).then(res => {
+        JobTitleService.getRoles().then((res) => {
           if (Array.isArray(res.data)) {
             setRoles(res.data);
           } else {
@@ -72,7 +72,7 @@ function RoleManagement() {
   };
 
   const handleDelete = async (id) => {
-    RoleService.deleteRole(id).then((res) => {
+    JobTitleService.deleteRole(id).then((res) => {
       setRoles(roles.filter(role => role.id !== id));
     }).catch(error => {
       console.error("There was an error deleting the role!", error);
@@ -95,11 +95,11 @@ function RoleManagement() {
 
   return (
     <div>
-      <h2 className="text-center" style={{ marginTop: "10px"}}>Role Management</h2>
+      <h2 className="text-center" style={{ marginTop: "10px"}}>Job Title Management</h2>
       <div className="row" style={{ marginTop: "25px", marginBottom: "10px", marginLeft: "2px" }}>
-        <input type="text" className="form-control" style={{ width: "20%", marginRight: "10px" }} value={name} onChange={handleRoleNameChange} placeholder="Role Name" required />
-        <input type="text" className="form-control" style={{ width: "20%" }} value={description} onChange={handleRoleDescriptionChange} placeholder="Role Description" required />
-        <button className="btn btn-primary" style={{ marginLeft: "10px" }} onClick={saveRole}>{editingRoleId ? 'Update Role' : 'Add New Role'}</button>
+        <input type="text" className="form-control" style={{ width: "20%", marginRight: "10px" }} value={name} onChange={handleRoleNameChange} placeholder="Job Title" required />
+        <input type="text" className="form-control" style={{ width: "20%" }} value={description} onChange={handleRoleDescriptionChange} placeholder="Description" required />
+        <button className="btn btn-primary" style={{ marginLeft: "10px" }} onClick={saveRole}>{editingRoleId ? 'Update Role' : 'Add New JobTitle'}</button>
       </div>
       <table className="table table-striped table-bordered">
         <thead className="table-primary">
@@ -130,7 +130,7 @@ function RoleManagement() {
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">{editingRoleId ? 'Edit Role' : 'Add Role'}</h5>
+              <h5 className="modal-title">{editingRoleId ? 'Edit Job Title' : 'Add Job Title'}</h5>
               <button type="button" className="close" onClick={handleClose} aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -138,11 +138,11 @@ function RoleManagement() {
             <div className="modal-body">
               <form>
                 <div className="form-group">
-                  <label htmlFor="roleName">Role Name</label>
+                  <label htmlFor="roleName">Job Title</label>
                   <input type="text" className="form-control" id="roleName" value={name} onChange={handleRoleNameChange} />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="roleDescription">Role Description</label>
+                  <label htmlFor="roleDescription">Description</label>
                   <input type="text" className="form-control" id="roleDescription" value={description} onChange={handleRoleDescriptionChange} />
                 </div>
               </form>
@@ -158,4 +158,4 @@ function RoleManagement() {
   );
 }
 
-export default RoleManagement;
+export default JobTitleManagement;

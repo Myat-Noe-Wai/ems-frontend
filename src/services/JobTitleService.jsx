@@ -1,7 +1,8 @@
 import axios from 'axios';
-const ROLE_API_BASE_URL = "https://employee-management-system-4oo9.onrender.com/api/roles";
-// const ROLE_API_BASE_URL = "http://localhost:8080/api/roles";
-class RoleService{
+// const ROLE_API_BASE_URL = "https://employee-management-system-4oo9.onrender.com/api/roles";
+const ROLE_API_BASE_URL = "http://localhost:8081/api/jobTitles";
+// const ROLE_API_BASE_URL = "http://13.61.161.105/api/roles";
+class JobTitleService{
     getRoles(){
         return axios.get(ROLE_API_BASE_URL);
     }
@@ -22,4 +23,4 @@ class RoleService{
         return axios.put(ROLE_API_BASE_URL + '/' + roleId, role);
     }
 }
-export default new RoleService();
+export default new JobTitleService();

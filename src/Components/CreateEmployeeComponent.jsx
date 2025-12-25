@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import EmployeeService from '../services/EmployeeService';
-import RoleService from '../services/RoleService';
+import JobTitleService from '../services/JobTitleService';
 import { useNavigate } from 'react-router-dom';
 
 const CreateEmployeeComponent = () => {  
@@ -29,7 +29,7 @@ const CreateEmployeeComponent = () => {
     }
 
     useEffect(() => {
-        RoleService.getRoles().then((res) => {
+        JobTitleService.getRoles().then((res) => {
             if (Array.isArray(res.data)) {
                 setRole(res.data);
             } else {
