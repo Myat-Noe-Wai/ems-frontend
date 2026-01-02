@@ -5,18 +5,19 @@ const EmployeeAttendance = () => {
   const [status, setStatus] = useState('');
   const [showModal, setShowModal] = useState(false);
   const employeeId = localStorage.getItem('id'); // Replace with actual employee ID
-  const employeeName = localStorage.getItem('empName'); 
+  const employeeName = localStorage.getItem('empName');
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   
   const handleClockIn = async () => {
     try {
-      // const response = await axios.post('https://employee-management-system-4oo9.onrender.com/api/attendance/clock-in', null, {      
-      const response = await axios.post('http://localhost:8081/api/attendance/clock-in', null, {
-      // const response = await axios.post('http://13.61.161.105/api/attendance/clock-in', null, {
-        params: {
-          employeeId: employeeId,
+      await axios.post(
+        `${API_BASE_URL}/attendance/clock-in`,
+        {
+          employeeId: Number(employeeId),
           employeeName: employeeName,
         }
-      });
+      );
+
       setStatus('Clock-in successful!');
       setShowModal(true);
     } catch (error) {
@@ -28,13 +29,8 @@ const EmployeeAttendance = () => {
   
   const handleClockOut = async () => {
     try {
-      // const response = await axios.post('https://employee-management-system-4oo9.onrender.com/api/attendance/clock-out', null, {
-        const response = await axios.post('http://localhost:8081/api/attendance/clock-out', null, {
-      // const response = await axios.post('http://13.61.161.105/api/attendance/clock-out', null, {
-        params: {
-          employeeId: employeeId,
-        }
-      });
+      await axios.put(`${API_BASE_URL}/attendance/clock-out/${employeeId}`);
+
       setStatus('Clock-out successful!');
       setShowModal(true);
     } catch (error) {

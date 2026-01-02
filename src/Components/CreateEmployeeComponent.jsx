@@ -11,7 +11,7 @@ const CreateEmployeeComponent = () => {
     const [emailId, setEmailId] = useState('');
     const [contactInfo, setContact] = useState('');
     const [address, setAddress] = useState('');
-    const [gender, setGender] = useState('');
+    const [gender, setGender] = useState("Male"); 
     const [joiningDate, setJoiningDate] = useState('');
     const [salary, setSalary] = useState('');
     const [leaveDay, setLeaveDay] = useState('');
@@ -116,7 +116,7 @@ const CreateEmployeeComponent = () => {
                                             value={dateOfBirth} onChange={handleDateOfBirthChange}/>
                                     </div>
                                     <div className="form-group col-md-6">
-                                        <label> Email Id: </label>
+                                        <label> Email: </label>
                                         <input placeholder="Email Address" name="emailId" className="form-control" 
                                             value={emailId} onChange={handleEmailChange}/>
                                     </div>
@@ -138,7 +138,7 @@ const CreateEmployeeComponent = () => {
                                         <label>Joining Date</label>
                                         <input
                                             placeholder="Joining Date"
-                                            type="joiningDate"
+                                            type="date"
                                             name="joiningDate"
                                             className="form-control"
                                             value={joiningDate}
@@ -185,10 +185,10 @@ const CreateEmployeeComponent = () => {
                                     <div className="form-group col-md-6">
                                         <label>Gender</label>
                                         <input style={{marginLeft: "10px"}} type="radio" id="male" name="gender" value="Male"
-                                            onChange={handleGenderChange} />
+                                            checked={gender === "Male"} onChange={handleGenderChange} />
                                         <label style={{marginLeft: "5px"}}>Male</label>
                                         <input style={{marginLeft: "10px"}} type="radio" id="female" name="gender" value="Female" 
-                                            onChange={handleGenderChange} />
+                                            checked={gender === "Female"} onChange={handleGenderChange} />
                                         <label style={{marginLeft: "5px"}}>Female</label>
                                     </div>
                                 </div>                                

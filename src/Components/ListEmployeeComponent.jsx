@@ -47,7 +47,7 @@ const ListEmployeeComponent = () => {
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Date of Birth</th>
-                            <th>Email Id</th>                            
+                            <th>Email</th>                            
                             <th>Contact Info</th>
                             <th>Address</th>
                             <th>Gender</th>

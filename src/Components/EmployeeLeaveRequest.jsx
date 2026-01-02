@@ -2,6 +2,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+const LEAVE_TYPES = [
+  { value: '', label: 'Select Leave Type' },
+  { value: 'ANNUAL', label: 'Annual Leave' },
+  { value: 'SICK', label: 'Sick Leave' },
+  { value: 'CASUAL', label: 'Casual Leave' },
+  { value: 'UNPAID', label: 'Unpaid Leave' },
+  { value: 'MATERNITY', label: 'Maternity Leave' },
+  { value: 'PATERNITY', label: 'Paternity Leave' },
+  { value: 'COMPASSIONATE', label: 'Compassionate Leave' }
+];
+
 const EmployeeLeaveRequest = () => {
   const [leaveType, setLeaveType] = useState('');
   const [startDate, setStartDate] = useState('');
@@ -10,6 +21,7 @@ const EmployeeLeaveRequest = () => {
   const [message, setMessage] = useState('');
   const [leaveHistory, setLeaveHistory] = useState([]);
   const employeeId = localStorage.getItem('id');
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   console.log("empId ****");
   console.log(employeeId);
 
@@ -20,9 +32,7 @@ const EmployeeLeaveRequest = () => {
   
   const fetchLeaveHistory = async (employeeId) => {
     try {
-      // const response = await axios.get(`https://employee-management-system-4oo9.onrender.com/api/leave-requests/employee/${employeeId}`);
-      const response = await axios.get(`http://localhost:8081/api/leave-requests/employee/${employeeId}`);
-      // const response = await axios.get(`http://13.61.161.105/api/leave-requests/employee/${employeeId}`);
+      const response = await axios.get(`${API_BASE_URL}/leave-requests/employee/${employeeId}`);
       console.log("response");
       console.log(response);
       setLeaveHistory(response.data);
@@ -33,28 +43,38 @@ const EmployeeLeaveRequest = () => {
 
   const handleLeaveApply = async () => {
     const leaveRequest = {
+      employeeId: Number(employeeId),  // Convert to number
       leaveType,
       startDate,
       endDate,
-      reason,
-      employee: {
-        id: employeeId
-     }
+      reason
     };
+
+    if (!leaveType || !startDate || !endDate) {
+      setMessage('Please fill all required fields');
+      return;
+    }    
+
     console.log("leaveRequest");
     console.log(leaveRequest);
     
     try {
-      // const response = await axios.post('https://employee-management-system-4oo9.onrender.com/api/leave-requests/apply', leaveRequest);
-      const response = await axios.post('http://localhost:8081/api/leave-requests/apply', leaveRequest);
-      // const response = await axios.post('http://13.61.161.105/api/leave-requests/apply', leaveRequest);
+      const response = await axios.post(
+        `${API_BASE_URL}/leave-requests/apply`,
+        leaveRequest
+      );
+
       setMessage('Leave applied successfully');
-      fetchLeaveHistory(); // Refresh history after successful application
+      fetchLeaveHistory(employeeId); // Refresh history after successful application
+      setLeaveType('');
+      setStartDate('');
+      setEndDate('');
+      setReason('');
     } catch (error) {
       setMessage('Error applying for leave');
       console.error('Error applying for leave', error);
     }
-  };
+  };  
 
   return (
     <div className='container'>
@@ -64,13 +84,13 @@ const EmployeeLeaveRequest = () => {
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
           <div style={{ flex: '1', marginRight: '10px' }}>
             <label className="form-label">Leave Type:</label>
-            <input
-              type="text"
-              style={{ width: "100%" }}
-              className="form-control"
-              value={leaveType}
-              onChange={(e) => setLeaveType(e.target.value)}
-            />
+            <select className="form-control" style={{ width: "100%" }} value={leaveType} onChange={(e) => setLeaveType(e.target.value)}>
+              {LEAVE_TYPES.map((type) => (
+                <option key={type.value} value={type.value}>
+                  {type.label}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div style={{ flex: '1', marginLeft: '10px' }}>

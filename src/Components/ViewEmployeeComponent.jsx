@@ -30,7 +30,7 @@ const ViewEmployeeComponent = () => {
             setJoiningDate(employee.joiningDate);
             setSalary(employee.salary);
             setLeaveDay(employee.leaveDay);
-            setRole(employee.role);
+            setRole(employee.jobTitle);
         });
     }, [id]);
 

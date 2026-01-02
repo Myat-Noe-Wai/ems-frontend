@@ -1,7 +1,6 @@
 import axios from 'axios';
-// const ROLE_API_BASE_URL = "https://employee-management-system-4oo9.onrender.com/api/roles";
-const ROLE_API_BASE_URL = "http://localhost:8081/api/jobTitles";
-// const ROLE_API_BASE_URL = "http://13.61.161.105/api/roles";
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const ROLE_API_BASE_URL = `${API_BASE_URL}/jobTitles`;
 class JobTitleService{
     getRoles(){
         return axios.get(ROLE_API_BASE_URL);

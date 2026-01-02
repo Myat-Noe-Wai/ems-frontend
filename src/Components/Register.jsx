@@ -6,14 +6,12 @@ function Register() {
     const [employeename, setEmployeename] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
     
     async function save(event) {
         event.preventDefault();
         try {
-          // await axios.post("https://employee-management-system-4oo9.onrender.com/api/v1/user/save", {
-            await axios.post("http://localhost:8081/api/v1/user/save", {
-          // await axios.post("http://13.61.161.105/api/v1/user/save", {
+            await axios.post(`${API_BASE_URL}/api/v1/user/save`, {
           employeename: employeename,
           email: email,
           password: password,

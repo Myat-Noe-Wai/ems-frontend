@@ -24,12 +24,12 @@ const UpdateEmployeeComponent = () => {
             let employee = res.data;
             setFirstName(employee.firstName);
             setLastName(employee.lastName);
-            setDateOfBirth(employee.dateOfBirth);
+            setDateOfBirth(formatDateForInput(employee.dateOfBirth));
             setEmailId(employee.emailId);
             setContact(employee.contactInfo);
             setAddress(employee.address);
             setGender(employee.gender);
-            setJoiningDate(employee.joiningDate);
+            setJoiningDate(formatDateForInput(employee.joiningDate));
             setSalary(employee.salary);
             setLeaveDay(employee.leaveDay);
             setSelectedRole(employee.role);
@@ -104,6 +104,11 @@ const UpdateEmployeeComponent = () => {
     const handleRoleChange = (event) => {
         setSelectedRole(event.target.value);
     };
+
+    const formatDateForInput = (dateString) => {
+        if (!dateString) return '';
+        return dateString.split('T')[0];
+      };      
 
     return (
         <div>
@@ -185,7 +190,7 @@ const UpdateEmployeeComponent = () => {
                                         <label>Joining Date</label>
                                         <input
                                             placeholder="Joining Date"
-                                            type="joiningDate"
+                                            type="date"
                                             name="joiningDate"
                                             className="form-control"
                                             value={joiningDate}

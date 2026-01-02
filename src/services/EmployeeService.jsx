@@ -1,7 +1,6 @@
 import axios from 'axios';
-// const EMPLOYEE_API_BASE_URL = "https://employee-management-system-4oo9.onrender.com/api/v1/employees";
-const EMPLOYEE_API_BASE_URL = "http://localhost:8081/api/v1/employees";
-// const EMPLOYEE_API_BASE_URL = "http://13.61.161.105/api/v1/employees";
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+const EMPLOYEE_API_BASE_URL = `${API_BASE_URL}/v1/employees`;
 class EmployeeService{
     getEmployees(){
         return axios.get(EMPLOYEE_API_BASE_URL);

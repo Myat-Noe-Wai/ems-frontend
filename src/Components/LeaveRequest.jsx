@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 const LeaveRequests = () => {
   const [leaveRequests, setLeaveRequests] = useState([]);
 
@@ -9,23 +10,17 @@ const LeaveRequests = () => {
   }, []);
   
   const fetchLeaveRequests = async () => {
-    // const response = await axios.get('https://employee-management-system-4oo9.onrender.com/api/leave-requests');
-    const response = await axios.get('http://localhost:8081/api/leave-requests');
-    // const response = await axios.get('http://13.61.161.105/api/leave-requests');
+    const response = await axios.get(`${API_BASE_URL}/leave-requests`);
     setLeaveRequests(response.data);
   };
 
   const handleApprove = async (id) => {
-    // await axios.put(`https://employee-management-system-4oo9.onrender.com/api/leave-requests/${id}/approve`);
-    await axios.put(`http://localhost:8081/api/leave-requests/${id}/approve`);
-    // await axios.put(`http://13.61.161.105/api/leave-requests/${id}/approve`);
+    await axios.put(`${API_BASE_URL}/leave-requests/${id}/approve`);
     fetchLeaveRequests();
   };
 
   const handleReject = async (id) => {
-    // await axios.put(`https://employee-management-system-4oo9.onrender.com/api/leave-requests/${id}/reject`);
-    await axios.put(`http://localhost:8081/api/leave-requests/${id}/reject`);
-    // await axios.put(`http://13.61.161.105/api/leave-requests/${id}/reject`);
+    await axios.put(`${API_BASE_URL}/leave-requests/${id}/reject`);
     fetchLeaveRequests();
   };
 
@@ -47,7 +42,7 @@ const LeaveRequests = () => {
         <tbody>
           {leaveRequests.map((request) => (
             <tr key={request.id}>
-              <td>{request.employee.firstName+ ' ' +request.employee.lastName}</td>
+              <td>{request.employeeName}</td>
               <td>{request.leaveType}</td>
               <td>{new Date(request.startDate).toLocaleDateString()}</td>
               <td>{new Date(request.endDate).toLocaleDateString()}</td>

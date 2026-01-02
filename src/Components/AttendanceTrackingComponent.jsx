@@ -7,6 +7,7 @@ import moment from 'moment';
 // function AttendanceTrackingComponent() {
 const AttendanceTrackingComponent = () => {
     const [attendanceRecords, setAttendanceRecords] = useState([]);
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
     useEffect(() => {
         fetchAttendanceRecords();
@@ -14,9 +15,7 @@ const AttendanceTrackingComponent = () => {
 
     const fetchAttendanceRecords = async () => {
         try {
-        // const response = await axios.get('https://employee-management-system-4oo9.onrender.com/api/attendance');
-        const response = await axios.get('http://localhost:8081/api/attendance');
-        // const response = await axios.get('http://13.61.161.105/api/attendance');
+        const response = await axios.get(`${API_BASE_URL}/attendance`);
         setAttendanceRecords(response.data);
         } catch (error) {
         console.error('Error fetching attendance records:', error);
