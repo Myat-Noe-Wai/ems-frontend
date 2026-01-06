@@ -73,7 +73,7 @@ const ListEmployeeComponent = () => {
                                     <td>{new Date(employee.joiningDate).toLocaleDateString()}</td>
                                     <td>{employee.salary}</td>
                                     <td>{employee.leaveDay}</td>
-                                    <td>{employee.role}</td>
+                                    <td>{employee.jobTitle}</td>
                                     <td>                                        
                                         <button style={{marginLeft : "10px"}}
                                         className="btn btn-success" onClick={()=>editEmployee(employee.id)}>

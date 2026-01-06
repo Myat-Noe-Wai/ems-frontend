@@ -1,40 +1,38 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../api/axiosConfig';
 
 const EmployeeAttendance = () => {
   const [status, setStatus] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const employeeId = localStorage.getItem('id'); // Replace with actual employee ID
+
+  const employeeId = localStorage.getItem('id');
   const employeeName = localStorage.getItem('empName');
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-  
+
   const handleClockIn = async () => {
     try {
-      await axios.post(
-        `${API_BASE_URL}/attendance/clock-in`,
-        {
-          employeeId: Number(employeeId),
-          employeeName: employeeName,
-        }
-      );
+      // Store the response in 'res'
+      const res = await api.post('/attendance/clock-in', {
+        employeeId: Number(employeeId),
+        employeeName: employeeName,
+      });
 
-      setStatus('Clock-in successful!');
+      // Show backend message if exists, otherwise default success
+      setStatus(res.data.message || 'Clock-in successful!');
       setShowModal(true);
     } catch (error) {
-      console.error('Error clocking in:', error);
+      console.error(error);
       setStatus('Failed to clock in.');
       setShowModal(true);
     }
   };
-  
+
   const handleClockOut = async () => {
     try {
-      await axios.put(`${API_BASE_URL}/attendance/clock-out/${employeeId}`);
-
-      setStatus('Clock-out successful!');
+      const res = await api.put(`/attendance/clock-out/${employeeId}`);
+      setStatus(res.data.message || 'Clock-out successful!');
       setShowModal(true);
     } catch (error) {
-      console.error('Error clocking out:', error);
+      console.error(error);
       setStatus('Failed to clock out.');
       setShowModal(true);
     }
@@ -44,28 +42,27 @@ const EmployeeAttendance = () => {
 
   return (
     <div>
-      <h2 className="text-center" style={{ marginTop: "10px"}}>Employee Attendance</h2>
-      <div style={{textAlign: "center"}} className={{marginTop: "10px", marginBottom: "15px"}}>
-        <button className="btn btn-success" onClick={handleClockIn} style={{marginRight: "10px"}}>Time In</button>
+      <h2 className="text-center">Employee Attendance</h2>
+      <div style={{ textAlign: "center" }}>
+        <button className="btn btn-success" onClick={handleClockIn}>Time In</button>
         <button className="btn btn-success" onClick={handleClockOut}>Time Out</button>
       </div>
+
       {showModal && (
-        <div className="modal" style={modalStyle}>
-          <div className="modal-content" style={modalContentStyle}>
-            <span className="close" style={closeStyle} onClick={handleClose}>&times;</span>
+        <div style={modalStyle}>
+          <div style={modalContentStyle}>
+            <span style={closeStyle} onClick={handleClose}>&times;</span>
             <h4>Attendance Status</h4>
             <p>{status}</p>
             <button className="btn btn-secondary" onClick={handleClose}>Close</button>
           </div>
         </div>
       )}
-      <div style={{height: "50px"}}>
-
-      </div>
     </div>
   );
 };
 
+// --- Modal styling ---
 const modalStyle = {
   position: 'fixed',
   top: 0,
@@ -84,6 +81,7 @@ const modalContentStyle = {
   borderRadius: '5px',
   width: '300px',
   textAlign: 'center',
+  position: 'relative',
 };
 
 const closeStyle = {
