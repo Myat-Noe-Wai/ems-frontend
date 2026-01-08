@@ -1,6 +1,6 @@
 // src/components/EmployeeLeaveRequest.js
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api/axiosConfig';
 
 const LEAVE_TYPES = [
   { value: '', label: 'Select Leave Type' },
@@ -20,21 +20,18 @@ const EmployeeLeaveRequest = () => {
   const [reason, setReason] = useState('');
   const [message, setMessage] = useState('');
   const [leaveHistory, setLeaveHistory] = useState([]);
-  const employeeId = localStorage.getItem('id');
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-  console.log("empId ****");
-  console.log(employeeId);
 
-  // Fetch leave history for the logged-in employee
+  const employeeId = Number(localStorage.getItem('id'));
+
   useEffect(() => {
-    fetchLeaveHistory(employeeId);
-  }, []);
-  
-  const fetchLeaveHistory = async (employeeId) => {
+    if (employeeId) {
+      fetchLeaveHistory();
+    }
+  }, [employeeId]);
+
+  const fetchLeaveHistory = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/leave-requests/employee/${employeeId}`);
-      console.log("response");
-      console.log(response);
+      const response = await api.get(`/leave-requests/employee/${employeeId}`);
       setLeaveHistory(response.data);
     } catch (error) {
       console.error('Error fetching leave history', error);
@@ -42,30 +39,23 @@ const EmployeeLeaveRequest = () => {
   };
 
   const handleLeaveApply = async () => {
+    if (!leaveType || !startDate || !endDate) {
+      setMessage('Please fill all required fields');
+      return;
+    }
+
     const leaveRequest = {
-      employeeId: Number(employeeId),  // Convert to number
+      employeeId,
       leaveType,
       startDate,
       endDate,
       reason
     };
 
-    if (!leaveType || !startDate || !endDate) {
-      setMessage('Please fill all required fields');
-      return;
-    }    
-
-    console.log("leaveRequest");
-    console.log(leaveRequest);
-    
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/leave-requests/apply`,
-        leaveRequest
-      );
-
+      await api.post('/leave-requests/apply', leaveRequest);
       setMessage('Leave applied successfully');
-      fetchLeaveHistory(employeeId); // Refresh history after successful application
+      fetchLeaveHistory();
       setLeaveType('');
       setStartDate('');
       setEndDate('');
@@ -74,17 +64,22 @@ const EmployeeLeaveRequest = () => {
       setMessage('Error applying for leave');
       console.error('Error applying for leave', error);
     }
-  };  
+  };
 
   return (
-    <div className='container'>
+    <div className="container">
+      {/* Apply Leave */}
       <div>
-        <h3 style={{textAlign: "center"}}>Apply for Leave</h3>
+        <h3 className="text-center">Apply for Leave</h3>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-          <div style={{ flex: '1', marginRight: '10px' }}>
-            <label className="form-label">Leave Type:</label>
-            <select className="form-control" style={{ width: "100%" }} value={leaveType} onChange={(e) => setLeaveType(e.target.value)}>
+        <div className="row mb-3">
+          <div className="col-md-6">
+            <label className="form-label">Leave Type</label>
+            <select
+              className="form-control"
+              value={leaveType}
+              onChange={(e) => setLeaveType(e.target.value)}
+            >
               {LEAVE_TYPES.map((type) => (
                 <option key={type.value} value={type.value}>
                   {type.label}
@@ -93,11 +88,10 @@ const EmployeeLeaveRequest = () => {
             </select>
           </div>
 
-          <div style={{ flex: '1', marginLeft: '10px' }}>
-            <label className="form-label">Start Date:</label>
+          <div className="col-md-6">
+            <label className="form-label">Start Date</label>
             <input
               type="date"
-              style={{ width: "100%" }}
               className="form-control"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
@@ -105,22 +99,20 @@ const EmployeeLeaveRequest = () => {
           </div>
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-          <div style={{ flex: '1', marginRight: '10px' }}>
-            <label className="form-label">End Date:</label>
+        <div className="row mb-3">
+          <div className="col-md-6">
+            <label className="form-label">End Date</label>
             <input
               type="date"
-              style={{ width: "100%" }}
               className="form-control"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
             />
           </div>
 
-          <div style={{ flex: '1', marginLeft: '10px' }}>
-            <label className="form-label">Reason:</label>
+          <div className="col-md-6">
+            <label className="form-label">Reason</label>
             <textarea
-              style={{ width: "100%" }}
               className="form-control"
               value={reason}
               onChange={(e) => setReason(e.target.value)}
@@ -131,24 +123,26 @@ const EmployeeLeaveRequest = () => {
         <button onClick={handleLeaveApply} className="btn btn-success">
           Apply for Leave
         </button>
-        <p>{message}</p>
+
+        {message && <p className="mt-2">{message}</p>}
       </div>
 
-      <div>
-        <h3>Leave History</h3>        
-        <table class="table table-striped table-hover" style={{width: "100%"}}>
+      {/* Leave History */}
+      <div className="mt-4">
+        <h3>Leave History</h3>
+        <table className="table table-striped table-hover">
           <thead className="table-primary">
             <tr>
-              <th scope="col">Leave Type</th>
-              <th scope="col">Start Date</th>
-              <th scope="col">End Date</th>
-              <th scope="col">Status</th>
+              <th>Leave Type</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
             {leaveHistory.map((leave) => (
-              <tr>
-                <td scope="row">{leave.leaveType}</td>
+              <tr key={leave.id}>
+                <td>{leave.leaveType}</td>
                 <td>{new Date(leave.startDate).toLocaleDateString()}</td>
                 <td>{new Date(leave.endDate).toLocaleDateString()}</td>
                 <td>{leave.status}</td>

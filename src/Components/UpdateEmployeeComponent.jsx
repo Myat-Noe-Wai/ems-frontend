@@ -32,7 +32,7 @@ const UpdateEmployeeComponent = () => {
             setJoiningDate(formatDateForInput(employee.joiningDate));
             setSalary(employee.salary);
             setLeaveDay(employee.leaveDay);
-            setSelectedRole(employee.role);
+            setSelectedRole(employee.jobTitle);
         });
 
         JobTitleService.getRoles().then((res) => {
@@ -49,7 +49,8 @@ const UpdateEmployeeComponent = () => {
 
     const updateEmployee = (e) => {
         e.preventDefault();
-        let employee = { firstName, lastName, dateOfBirth, emailId, contactInfo, address, gender, joiningDate, salary, leaveDay, role: selectedRole };
+        let employee = { firstName, lastName, dateOfBirth, emailId, contactInfo, address, gender, 
+                        joiningDate, salary, leaveDay, jobTitle: selectedRole };
         console.log('employee => ' + JSON.stringify(employee));
 
         EmployeeService.updateEmployee(employee, id).then(res => {
@@ -220,9 +221,9 @@ const UpdateEmployeeComponent = () => {
                                         />
                                     </div>
                                     <div className="form-group col-md-6">
-                                        <label>Role</label>
+                                        <label>Job Title</label>
                                         <select value={selectedRole} onChange={handleRoleChange} className="form-control">
-                                            <option value="">Select Role</option>
+                                            <option value="">Select Job Title</option>
                                             {roles.map(role => (
                                                 <option key={role.id} value={role.name}>
                                                     {role.name}

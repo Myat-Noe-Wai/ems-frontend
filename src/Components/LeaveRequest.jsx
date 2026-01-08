@@ -1,32 +1,46 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api/axiosConfig';
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 const LeaveRequests = () => {
   const [leaveRequests, setLeaveRequests] = useState([]);
 
   useEffect(() => {
     fetchLeaveRequests();
   }, []);
-  
+
   const fetchLeaveRequests = async () => {
-    const response = await axios.get(`${API_BASE_URL}/leave-requests`);
-    setLeaveRequests(response.data);
+    try {
+      const response = await api.get('/leave-requests');
+      setLeaveRequests(response.data);
+    } catch (error) {
+      console.error('Error fetching leave requests:', error);
+    }
   };
 
   const handleApprove = async (id) => {
-    await axios.put(`${API_BASE_URL}/leave-requests/${id}/approve`);
-    fetchLeaveRequests();
+    try {
+      await api.put(`/leave-requests/${id}/approve`);
+      fetchLeaveRequests();
+    } catch (error) {
+      console.error('Error approving leave request:', error);
+    }
   };
 
   const handleReject = async (id) => {
-    await axios.put(`${API_BASE_URL}/leave-requests/${id}/reject`);
-    fetchLeaveRequests();
+    try {
+      await api.put(`/leave-requests/${id}/reject`);
+      fetchLeaveRequests();
+    } catch (error) {
+      console.error('Error rejecting leave request:', error);
+    }
   };
 
   return (
     <div>
-      <h2 className="text-center" style={{ marginTop: "10px"}}>Leave Requests</h2>
+      <h2 className="text-center" style={{ marginTop: "10px" }}>
+        Leave Requests
+      </h2>
+
       <table className="table table-striped table-bordered">
         <thead className="table-primary">
           <tr>
@@ -51,8 +65,19 @@ const LeaveRequests = () => {
               <td>
                 {request.status === 'Pending' && (
                   <>
-                    <button onClick={() => handleApprove(request.id)} className="btn btn-success" style={{marginRight: "10px"}}>Approve</button>
-                    <button onClick={() => handleReject(request.id)} className="btn btn-danger" >Reject</button>
+                    <button
+                      onClick={() => handleApprove(request.id)}
+                      className="btn btn-success"
+                      style={{ marginRight: "10px" }}
+                    >
+                      Approve
+                    </button>
+                    <button
+                      onClick={() => handleReject(request.id)}
+                      className="btn btn-danger"
+                    >
+                      Reject
+                    </button>
                   </>
                 )}
               </td>

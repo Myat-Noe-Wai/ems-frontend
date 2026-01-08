@@ -1,25 +1,28 @@
-import axios from 'axios';
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-const ROLE_API_BASE_URL = `${API_BASE_URL}/jobTitles`;
-class JobTitleService{
-    getRoles(){
-        return axios.get(ROLE_API_BASE_URL);
-    }
-    
-    getRoleById(id){
-        return axios.get(ROLE_API_BASE_URL + '/' + id);
-    }
+import api from "../api/axiosConfig";
 
-    createRole(role){
-        return axios.post(ROLE_API_BASE_URL, role);
-    }
+const ROLE_API_BASE_URL = "/jobTitles";
 
-    deleteRole(roleId) {
-        return axios.delete(ROLE_API_BASE_URL + '/' + roleId);
-    }
+class JobTitleService {
 
-    updateRole(role, roleId){
-        return axios.put(ROLE_API_BASE_URL + '/' + roleId, role);
-    }
+  getRoles() {
+    return api.get(ROLE_API_BASE_URL);
+  }
+
+  getRoleById(id) {
+    return api.get(`${ROLE_API_BASE_URL}/${id}`);
+  }
+
+  createRole(role) {
+    return api.post(ROLE_API_BASE_URL, role);
+  }
+
+  updateRole(role, roleId) {
+    return api.put(`${ROLE_API_BASE_URL}/${roleId}`, role);
+  }
+
+  deleteRole(roleId) {
+    return api.delete(`${ROLE_API_BASE_URL}/${roleId}`);
+  }
 }
+
 export default new JobTitleService();

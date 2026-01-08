@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import EmployeeService from '../services/EmployeeService';
 import JobTitleService from '../services/JobTitleService';
+import UserService from '../services/UserService';
 import { useNavigate } from 'react-router-dom';
 
 const CreateEmployeeComponent = () => {  
@@ -17,16 +18,9 @@ const CreateEmployeeComponent = () => {
     const [leaveDay, setLeaveDay] = useState('');
     const [roles, setRole] = useState([]);
     const [selectedRole, setSelectedRole] = useState('');
-
-    const saveEmployee = (e) => {
-        e.preventDefault();
-        let employee = { firstName, lastName, dateOfBirth, emailId, contactInfo, address, gender, role: selectedRole };
-        console.log('employee => ' + JSON.stringify(employee));
-
-        EmployeeService.createEmployee(employee).then(res => {
-            navigate('/employees');
-        });
-    }
+    // Users dropdown
+    const [users, setUsers] = useState([]);
+    const [selectedUserId, setSelectedUserId] = useState('');
 
     useEffect(() => {
         JobTitleService.getRoles().then((res) => {
@@ -39,7 +33,31 @@ const CreateEmployeeComponent = () => {
             console.error("Error fetching roles: ", err);
             setRole([]);
         });
+
+        UserService.getUsers()
+            .then(res => setUsers(Array.isArray(res.data) ? res.data : []))
+            .catch(err => {
+                console.error("Error fetching users: ", err);
+                setUsers([]);
+            });
     }, []);
+
+    const saveEmployee = (e) => {
+        e.preventDefault();
+        let employee = { 
+            userId: selectedUserId,
+            firstName, lastName, dateOfBirth, emailId, contactInfo, address, gender,
+            joiningDate,
+            salary: Number(salary),
+            leaveDay: Number(leaveDay),
+            jobTitle: selectedRole };
+            
+        console.log('employee => ' + JSON.stringify(employee));
+
+        EmployeeService.createEmployee(employee).then(res => {
+            navigate('/employees');
+        });
+    }
 
     const cancel = () => {
         navigate('/employees'); // Navigate to '/employees' when cancel is clicked
@@ -97,6 +115,21 @@ const CreateEmployeeComponent = () => {
                         <h3 className="text-center">Add Employee</h3>
                         <div className="card-body">
                             <form>
+                                <div className="form-group mb-3">
+                                    <label>User:</label>
+                                    <select 
+                                        className="form-control"
+                                        value={selectedUserId}
+                                        onChange={(e) => setSelectedUserId(e.target.value)}
+                                    >
+                                        <option value="">Select User</option>
+                                        {users.map(user => (
+                                            <option key={user.userId} value={user.userId}>
+                                                {user.username} ({user.email})
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
                                 <div className="row">
                                     <div className="form-group col-md-6">
                                         <label> First Name: </label>
@@ -124,7 +157,7 @@ const CreateEmployeeComponent = () => {
                                 <div className="row">
                                     <div className="form-group col-md-6">
                                         <label> Contact Info: </label>
-                                        <input placeholder="Contact Info" name="contactInfo" className="form-control" 
+                                        <input placeholder="09778573847" name="contactInfo" className="form-control" 
                                             value={contactInfo} onChange={handleContactChange}/>
                                     </div>
                                     <div className="form-group col-md-6">
@@ -149,7 +182,7 @@ const CreateEmployeeComponent = () => {
                                         <label>Salary</label>
                                         <input
                                             placeholder="Salary"
-                                            type="salary"
+                                            type="number"
                                             name="salary"
                                             className="form-control"
                                             value={salary}
@@ -162,7 +195,7 @@ const CreateEmployeeComponent = () => {
                                         <label>Leave Day</label>
                                         <input
                                             placeholder="Leave Day"
-                                            type="leaveDay"
+                                            type="number"
                                             name="leaveDay"
                                             className="form-control"
                                             value={leaveDay}

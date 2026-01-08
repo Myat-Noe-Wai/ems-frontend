@@ -6,7 +6,7 @@ const EmployeeAttendance = () => {
   const [showModal, setShowModal] = useState(false);
 
   const employeeId = localStorage.getItem('id');
-  const employeeName = localStorage.getItem('empName');
+  const employeeName = localStorage.getItem('userName');
 
   const handleClockIn = async () => {
     try {

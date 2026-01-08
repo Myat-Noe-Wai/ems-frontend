@@ -28,11 +28,11 @@ function Login({ setIsAuthenticated }) {
       localStorage.setItem('isAuthenticated', 'true');
       localStorage.setItem('accessToken', res.data.accessToken);
       localStorage.setItem('id', res.data.id);
-      localStorage.setItem('empName', res.data.empName);
-      localStorage.setItem('role', res.data.empName === 'admin' ? 'admin' : 'employee');
+      localStorage.setItem('userName', res.data.userName);
+      localStorage.setItem('role', res.data.role);
 
       // Navigate based on role
-      if (res.data.empName === 'admin') {
+      if (res.data.role === 'admin') {
         navigate('/home');
       } else {
         navigate('/emp-home');

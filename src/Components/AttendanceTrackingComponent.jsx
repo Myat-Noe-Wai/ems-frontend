@@ -1,13 +1,9 @@
-// import React, { PureComponent } from 'react';
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { parseISO, format } from 'date-fns';
+import api from '../api/axiosConfig';
 import moment from 'moment';
 
-// function AttendanceTrackingComponent() {
 const AttendanceTrackingComponent = () => {
     const [attendanceRecords, setAttendanceRecords] = useState([]);
-    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
     useEffect(() => {
         fetchAttendanceRecords();
@@ -15,44 +11,45 @@ const AttendanceTrackingComponent = () => {
 
     const fetchAttendanceRecords = async () => {
         try {
-        const response = await axios.get(`${API_BASE_URL}/attendance`);
-        setAttendanceRecords(response.data);
+            const response = await api.get('/attendance');
+            setAttendanceRecords(response.data);
         } catch (error) {
-        console.error('Error fetching attendance records:', error);
+            console.error('Error fetching attendance records:', error);
         }
     };
-    
+
     const formatDateTime = (dateTime) => {
-        // const parsedDate = parseISO(dateTime);
-        // return format(parsedDate, 'yyyy-MM-dd HH:mm:ss');
-        return moment(dateTime).format('YYYY-MM-DD HH:mm:ss');
+        return dateTime ? moment(dateTime).format('YYYY-MM-DD HH:mm:ss') : '';
     };
-        return (
-            <div>
-                <h2 className="text-center" style={{ marginTop: "10px"}}>Role Management</h2>
-            
-                <table className="table table-striped table-bordered">
-                    <thead className="table-primary">
-                        <tr>
-                            <th>Employee Name</th>
-                            <th>Date</th>
-                            <th>Clock In</th>
-                            <th>Clock Out</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {attendanceRecords.map(record => (
-                        <tr>
+
+    return (
+        <div>
+            <h2 className="text-center" style={{ marginTop: "10px" }}>
+                Attendance Tracking
+            </h2>
+
+            <table className="table table-striped table-bordered">
+                <thead className="table-primary">
+                    <tr>
+                        <th>Employee Name</th>
+                        <th>Date</th>
+                        <th>Clock In</th>
+                        <th>Clock Out</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {attendanceRecords.map((record, index) => (
+                        <tr key={index}>
                             <td>{record.employeeName}</td>
                             <td>{record.date}</td>
                             <td>{formatDateTime(record.clockIn)}</td>
-                            <td>{formatDateTime(record.clockOut)}</td>                            
+                            <td>{formatDateTime(record.clockOut)}</td>
                         </tr>
                     ))}
-                    </tbody>
-                </table>
-            </div>
-        );
+                </tbody>
+            </table>
+        </div>
+    );
 };
 
 export default AttendanceTrackingComponent;
