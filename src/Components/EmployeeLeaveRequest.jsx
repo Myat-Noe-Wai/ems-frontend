@@ -31,7 +31,7 @@ const EmployeeLeaveRequest = () => {
 
   const fetchLeaveHistory = async () => {
     try {
-      const response = await api.get(`/leave-requests/employee/${employeeId}`);
+      const response = await api.get(`/leave-requests/my`);
       setLeaveHistory(response.data);
     } catch (error) {
       console.error('Error fetching leave history', error);
@@ -45,7 +45,6 @@ const EmployeeLeaveRequest = () => {
     }
 
     const leaveRequest = {
-      employeeId,
       leaveType,
       startDate,
       endDate,
