@@ -28,7 +28,7 @@ const AttendanceTrackingComponent = () => {
                 Attendance Tracking
             </h2>
 
-            <table className="table table-striped table-bordered">
+            <table className="table table-striped table-bordered table-hover">
                 <thead className="table-primary">
                     <tr>
                         <th>Employee Name</th>

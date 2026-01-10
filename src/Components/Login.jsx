@@ -25,11 +25,12 @@ function Login({ setIsAuthenticated }) {
 
       // Save authentication info
       setIsAuthenticated(true);
-      localStorage.setItem('isAuthenticated', 'true');
-      localStorage.setItem('accessToken', res.data.accessToken);
+      localStorage.setItem('isAuthenticated', 'true');      
       localStorage.setItem('id', res.data.id);
       localStorage.setItem('userName', res.data.userName);
+      localStorage.setItem('email', res.data.email);
       localStorage.setItem('role', res.data.role);
+      localStorage.setItem('accessToken', res.data.accessToken);
 
       // Navigate based on role
       if (res.data.role === 'admin') {

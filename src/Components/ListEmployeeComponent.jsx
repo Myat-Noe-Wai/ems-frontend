@@ -40,7 +40,7 @@ const ListEmployeeComponent = () => {
                 <button className="btn btn-primary" style={{marginBottom: "10px"}} onClick={addEmployee}>Add Employee</button>
             </div>
             <div className="row">
-                <table className="table table-striped table-bordered">
+                <table className="table table-striped table-bordered table-hover">
                     <thead className="table-primary">
                         <tr>
                             <th>ID</th>

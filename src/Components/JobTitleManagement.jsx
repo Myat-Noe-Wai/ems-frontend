@@ -1,82 +1,73 @@
 import React, { useState, useEffect } from 'react';
 import JobTitleService from '../services/JobTitleService';
 import { useNavigate } from 'react-router-dom';
-// import 'bootstrap/dist/css/bootstrap.min.css';
 
 function JobTitleManagement() {
   const navigate = useNavigate();
+
   const [roles, setRoles] = useState([]);
   const [name, setRoleName] = useState('');
   const [description, setRoleDescription] = useState('');
   const [editingRoleId, setEditingRoleId] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
+  const [errors, setErrors] = useState({});
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+
   useEffect(() => {
-    JobTitleService.getRoles().then((res) => {
-      if (Array.isArray(res.data)) {
-        setRoles(res.data);
-      } else {
-        setRoles([]);
-      }
-    }).catch(err => {
-      console.error("Error fetching roles: ", err);
-      setRoles([]);
-    });
+    fetchRoles();
   }, []);
 
   const handleRoleNameChange = (e) => setRoleName(e.target.value);
   const handleRoleDescriptionChange = (e) => setRoleDescription(e.target.value);
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!name.trim()) newErrors.name = 'Job title is required';
+    if (!description.trim()) newErrors.description = 'Description is required';
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const saveRole = (e) => {
     e.preventDefault();
-    let role = { name, description };
+
+    if (!validateForm()) return;
+
+    const role = { name, description };
 
     if (editingRoleId) {
-      JobTitleService.updateRole(role, editingRoleId).then(res => {
-        console.log('role => ' + JSON.stringify(role));
-        JobTitleService.getRoles().then((res) => {
-          if (Array.isArray(res.data)) {
-            setRoles(res.data);
-          } else {
-            setRoles([]);
-          }
-        }).catch(err => {
-          console.error("Error fetching roles: ", err);
-          setRoles([]);
-        });
-        setRoleName('');
-        setRoleDescription('');
-        setEditingRoleId(null);
-        setShowModal(false);
-      }).catch(err => {
-        console.error("Error updating role: ", err);
+      JobTitleService.updateRole(role, editingRoleId).then(() => {
+        setSuccessMessage('Job title updated successfully');
+        setShowSuccessModal(true);
+        fetchRoles();
+        resetForm();
       });
     } else {
-      JobTitleService.createRole(role).then(res => {
-        JobTitleService.getRoles().then((res) => {
-          if (Array.isArray(res.data)) {
-            setRoles(res.data);
-          } else {
-            setRoles([]);
-          }
-        }).catch(err => {
-          console.error("Error fetching roles: ", err);
-          setRoles([]);
-        });
-        setRoleName('');
-        setRoleDescription('');
-      }).catch(err => {
-        console.error("Error saving role: ", err);
+      JobTitleService.createRole(role).then(() => {
+        setSuccessMessage('Job title added successfully');
+        setShowSuccessModal(true);
+        fetchRoles();
+        resetForm();
       });
     }
   };
 
-  const handleDelete = async (id) => {
-    JobTitleService.deleteRole(id).then((res) => {
-      setRoles(roles.filter(role => role.id !== id));
-    }).catch(error => {
-      console.error("There was an error deleting the role!", error);
+  const fetchRoles = () => {
+    JobTitleService.getRoles().then((res) => {
+      setRoles(Array.isArray(res.data) ? res.data : []);
     });
+  };
+
+  const resetForm = () => {
+    setRoleName('');
+    setRoleDescription('');
+    setEditingRoleId(null);
+    setErrors({});
+    setShowModal(false);
   };
 
   const handleEdit = (role) => {
@@ -86,22 +77,64 @@ function JobTitleManagement() {
     setShowModal(true);
   };
 
-  const handleClose = () => {
-    setShowModal(false);
-    setRoleName('');
-    setRoleDescription('');
-    setEditingRoleId(null);
+  const handleDelete = (id) => {
+    JobTitleService.deleteRole(id).then(() => {
+      setRoles(roles.filter(role => role.id !== id));
+    });
   };
 
   return (
     <div>
-      <h2 className="text-center" style={{ marginTop: "10px"}}>Job Title Management</h2>
-      <div className="row" style={{ marginTop: "25px", marginBottom: "10px", marginLeft: "2px" }}>
-        <input type="text" className="form-control" style={{ width: "20%", marginRight: "10px" }} value={name} onChange={handleRoleNameChange} placeholder="Job Title" required />
-        <input type="text" className="form-control" style={{ width: "20%" }} value={description} onChange={handleRoleDescriptionChange} placeholder="Description" required />
-        <button className="btn btn-primary" style={{ marginLeft: "10px" }} onClick={saveRole}>{editingRoleId ? 'Update Role' : 'Add New JobTitle'}</button>
+      <h2 className="text-center mt-2">Job Title Management</h2>
+
+      {/* ✅ HORIZONTAL FORM */}
+      <div className="d-flex align-items-start mt-4 mb-3 gap-3">
+
+        {/* Job Title */}
+        <div style={{ width: '220px', marginRight: '5px' }}>
+          <input
+            type="text"
+            className={`form-control ${errors.name ? 'is-invalid' : ''}`}
+            value={name}
+            onChange={handleRoleNameChange}
+            placeholder="Job Title"
+          />
+          {errors.name && (
+            <div className="text-danger small mt-1">
+              {errors.name}
+            </div>
+          )}
+        </div>
+
+        {/* Description */}
+        <div style={{ width: '220px', marginRight: '5px' }}>
+          <input
+            type="text"
+            className={`form-control ${errors.description ? 'is-invalid' : ''}`}
+            value={description}
+            onChange={handleRoleDescriptionChange}
+            placeholder="Description"
+          />
+          {errors.description && (
+            <div className="text-danger small mt-1">
+              {errors.description}
+            </div>
+          )}
+        </div>
+
+        {/* Button */}
+        <button
+          className="btn btn-primary"
+          style={{ height: '38px' }}
+          onClick={saveRole}
+        >
+          {editingRoleId ? 'Update JobTitle' : 'Add New JobTitle'}
+        </button>
+
       </div>
-      <table className="table table-striped table-bordered">
+
+      {/* TABLE */}
+      <table className="table table-striped table-bordered table-hover">
         <thead className="table-primary">
           <tr>
             <th>ID</th>
@@ -111,49 +144,55 @@ function JobTitleManagement() {
           </tr>
         </thead>
         <tbody>
-          {roles.map((role) => (
+          {roles.map(role => (
             <tr key={role.id}>
               <td>{role.id}</td>
               <td>{role.name}</td>
               <td>{role.description}</td>
               <td>
-                <button className="btn btn-success" onClick={() => handleEdit(role)}>Edit</button>
-                <button style={{ marginLeft: "10px" }} className="btn btn-danger" onClick={() => handleDelete(role.id)}>Delete</button>
+                <button className="btn btn-success mr-2" onClick={() => handleEdit(role)}>
+                  Edit
+                </button>
+                <button
+                  className="btn btn-danger ms-2"
+                  onClick={() => handleDelete(role.id)}
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      {/* Modal */}
-      <div className={`modal fade ${showModal ? 'show' : ''}`} style={{ display: showModal ? 'block' : 'none' }} tabIndex="-1" role="dialog" aria-hidden="true">
-        <div className="modal-dialog" role="document">
+      {/* SUCCESS MODAL */}
+      <div
+        className={`modal fade ${showSuccessModal ? 'show' : ''}`}
+        style={{ display: showSuccessModal ? 'block' : 'none' }}
+      >
+        <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">{editingRoleId ? 'Edit Job Title' : 'Add Job Title'}</h5>
-              <button type="button" className="close" onClick={handleClose} aria-label="Close">
-                <span aria-hidden="true">&times;</span>
+            <div className="modal-header bg-success text-white">
+              <h5 className="modal-title">Success</h5>
+              <button className="close" onClick={() => setShowSuccessModal(false)}>
+                <span>&times;</span>
               </button>
             </div>
-            <div className="modal-body">
-              <form>
-                <div className="form-group">
-                  <label htmlFor="roleName">Job Title</label>
-                  <input type="text" className="form-control" id="roleName" value={name} onChange={handleRoleNameChange} />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="roleDescription">Description</label>
-                  <input type="text" className="form-control" id="roleDescription" value={description} onChange={handleRoleDescriptionChange} />
-                </div>
-              </form>
+            <div className="modal-body text-center">
+              {successMessage}
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" onClick={handleClose}>Close</button>
-              <button type="button" className="btn btn-primary" onClick={saveRole}>{editingRoleId ? 'Save changes' : 'Add Role'}</button>
+              <button
+                className="btn btn-success"
+                onClick={() => setShowSuccessModal(false)}
+              >
+                OK
+              </button>
             </div>
           </div>
         </div>
       </div>
+
     </div>
   );
 }
