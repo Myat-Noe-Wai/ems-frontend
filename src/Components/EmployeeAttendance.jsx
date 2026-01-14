@@ -9,6 +9,7 @@ const EmployeeAttendance = () => {
 
   const userId = localStorage.getItem('id');
   const employeeName = localStorage.getItem('userName');
+  console.log("User Id in Employee Attendance: ", userId);
 
   useEffect(() => {
     fetchAttendance();
@@ -18,7 +19,7 @@ const EmployeeAttendance = () => {
     try {
       // Store the response in 'res'
       const res = await api.post('/attendance/clock-in', {
-        userId: Number(userId),
+        employeeId: Number(userId),
         employeeName: employeeName,
       });
 
@@ -57,6 +58,19 @@ const EmployeeAttendance = () => {
     }
   };
 
+  const formatTime = (dateTime) => {
+    if (!dateTime) return '-';
+  
+    const date = new Date(dateTime);
+  
+    return date.toLocaleTimeString('en-GB', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+      timeZone: 'Asia/Yangon',
+    });
+  };
+
   return (
     <div>
       <h2 className="text-center">Employee Attendance</h2>
@@ -68,7 +82,7 @@ const EmployeeAttendance = () => {
       <div className="mt-4">
         <h4 className="text-center">Attendance Records</h4>
         <table className="table table-bordered table-striped table-hover">
-          <thead>
+          <thead className="table-primary">
             <tr>
               <th>Date</th>
               <th>Clock In</th>
@@ -84,8 +98,8 @@ const EmployeeAttendance = () => {
               attendanceList.map((att) => (
                 <tr key={att.id}>
                   <td>{att.date}</td>
-                  <td>{att.clockIn || '-'}</td>
-                  <td>{att.clockOut || '-'}</td>
+                  <td>{formatTime(att.clockIn) || '-'}</td>
+                  <td>{formatTime(att.clockOut) || '-'}</td>
                 </tr>
               ))
             )}
