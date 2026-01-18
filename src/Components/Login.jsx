@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 
 function Login({ setIsAuthenticated }) {
@@ -81,6 +81,11 @@ function Login({ setIsAuthenticated }) {
               <button type="submit" className="btn btn-primary" onClick={login} style={{ marginLeft: "190px", width: "100px" }}>
                 Login
               </button>
+
+              <div className="mt-3 text-center">
+                <span>Don't have an account? </span>
+                <Link to="/register">Register here</Link>
+              </div>
             </form>
           </div>
         </div>

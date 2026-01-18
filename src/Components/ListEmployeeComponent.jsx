@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import EmployeeService from '../services/EmployeeService';
 
 const ListEmployeeComponent = () => {
@@ -13,22 +13,42 @@ const ListEmployeeComponent = () => {
     const indexOfLastEmployee = currentPage * employeesPerPage;
     const indexOfFirstEmployee = indexOfLastEmployee - employeesPerPage;
     const currentEmployees = filteredEmployees.slice(indexOfFirstEmployee, indexOfLastEmployee);
+    const location = useLocation();
+    const [successMessage, setSuccessMessage] = useState('');
 
     useEffect(() => {
         EmployeeService.getEmployees().then((res) => {
             setEmployees(res.data);
             setFilteredEmployees(res.data);
         });
+        if (location.state?.message) {
+            setSuccessMessage(location.state.message);
+    
+            // clear message after 3 seconds
+            setTimeout(() => setSuccessMessage(''), 3000);
+    
+            // prevent showing again on refresh
+            window.history.replaceState({}, document.title);
+        }
         
-    }, []);
+    }, [location.state]);
 
     const deleteEmployee = (id) => {
-        EmployeeService.deleteEmployee(id).then((res) => {
-            setEmployees(employees.filter(employee => employee.id !== id));
-        }).catch(error => {
-            console.error("There was an error deleting the employee!", error);
+        if (!window.confirm('Are you sure you want to delete this employee?')) return;
+        
+        EmployeeService.deleteEmployee(id).then(() => {
+          setEmployees(prev => prev.filter(e => e.id !== id));
+
+          // Remove from filteredEmployees (IMPORTANT)
+            setFilteredEmployees(prev => prev.filter(e => e.id !== id));
+
+            // Show success message
+            setSuccessMessage('Employee deleted successfully');
+
+            // Auto hide message
+            setTimeout(() => setSuccessMessage(''), 3000);
         });
-    }
+    };      
 
     const addEmployee = () => {
         navigate('/add-employee');
@@ -94,7 +114,17 @@ const ListEmployeeComponent = () => {
 
     return (
         <div>
-            <h2 className="text-center">Employee List</h2>
+            <h2 className="text-center mt-2">Employee List</h2>
+            {successMessage && (
+                <div className="alert alert-success alert-dismissible fade show mt-2" role="alert">
+                    {successMessage}
+                    <button
+                        type="button"
+                        className="btn-close"
+                        onClick={() => setSuccessMessage('')}
+                    ></button>
+                </div>
+            )}
             <div className="row">
                 <input type="text" className="form-control" placeholder="Search by name, email or role"
                     style={{width: "250px", marginRight: "5px"}} value={searchTerm} onChange={(e) => {
@@ -159,19 +189,20 @@ const ListEmployeeComponent = () => {
                                     <td>{Number(employee.salary).toLocaleString()} MMK</td>
                                     <td>{employee.leaveDay}</td>
                                     <td>{employee.jobTitle}</td>
-                                    <td>                                        
-                                        <button style={{marginLeft : "10px"}}
-                                        className="btn btn-success" onClick={()=>editEmployee(employee.id)}>
-                                            Update
-                                        </button>                                        
-                                        <button style={{marginLeft : "10px", marginTop: "10px", width: "79px"}}
-                                         className="btn btn-info" onClick={()=>viewEmployee(employee.id)}>
-                                            View
-                                        </button>
-                                        <button style={{marginLeft : "10px", marginTop: "10px", width: "79px"}}
-                                        className="btn btn-danger" onClick={()=>deleteEmployee(employee.id)}>
-                                            Delete
-                                        </button>
+                                    <td className="text-nowrap">
+                                        <div className="d-flex gap-2 justify-content-center">
+                                            <button className="btn btn-sm btn-outline-success mr-1" title="Update" onClick={() => editEmployee(employee.id)}>
+                                                <i className="bi bi-pencil"></i>
+                                            </button>
+
+                                            <button className="btn btn-sm btn-outline-info mr-1" title="View" onClick={() => viewEmployee(employee.id)}>
+                                                <i className="bi bi-eye"></i>
+                                            </button>
+
+                                            <button className="btn btn-sm btn-outline-danger" title="Delete" onClick={() => deleteEmployee(employee.id)}>
+                                                <i className="bi bi-trash"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))

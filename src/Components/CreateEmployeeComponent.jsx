@@ -55,7 +55,9 @@ const CreateEmployeeComponent = () => {
         console.log('employee => ' + JSON.stringify(employee));
 
         EmployeeService.createEmployee(employee).then(res => {
-            navigate('/employees');
+            navigate('/employees', {
+                state: { message: 'Employee added successfully!' }
+            });
         });
     }
 

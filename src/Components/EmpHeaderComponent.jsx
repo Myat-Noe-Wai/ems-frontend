@@ -61,6 +61,19 @@ const HeaderComponent = ({ setIsAuthenticated, setRole }) => {
                             Request Leave
                         </a>
                     </li>
+                    <li className="nav-item">
+                        <a
+                            className="nav-link"
+                            href="#"
+                            onClick={() => handleLinkClick('/my-attendance')}
+                            style={{
+                                fontWeight: activeLink === '/my-attendance' ? 'bold' : 'normal',
+                                color: activeLink === '/my-attendance' ? 'white' : '#dad7d7'
+                            }}
+                        >
+                            View Attendance
+                        </a>
+                    </li>
                 </ul>
 
                 {/* ACCOUNT ICON */}

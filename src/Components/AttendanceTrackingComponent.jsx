@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api/axiosConfig';
 import moment from 'moment';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+import autoTable from 'jspdf-autotable';
 
 const AttendanceTrackingComponent = () => {
     const today = moment().format('YYYY-MM-DD');
@@ -77,13 +82,32 @@ const AttendanceTrackingComponent = () => {
         const hours = moment.duration(end.diff(start)).asHours();
         return hours.toFixed(1);
     };
-    
-    const calculateStatus = (clockIn, clockOut) => {
+
+    // | Condition                                          | Status   |
+    // | -------------------------------------------------- | -------- |
+    // | No clockIn                                         | Absent   |
+    // | clockIn exists & no clockOut **AND date is today** | Working  |
+    // | clockIn exists & no clockOut **AND date < today**  | Absent   |
+    // | clockIn + clockOut ≥ 8 hrs                         | Present  |
+    // | clockIn + clockOut < 8 hrs                         | Half Day |
+    const calculateStatus = (date, clockIn, clockOut) => {
         if (!clockIn) return 'Absent';
-        if (clockIn && !clockOut) return 'Working';
-    
+
+        const recordDate = moment(date, 'YYYY-MM-DD');
+        const today = moment().startOf('day');
+
+        // ⛔ Missed clock-out and day already passed
+        if (clockIn && !clockOut && recordDate.isBefore(today)) {
+            return 'Absent';
+        }
+
+        // ⏳ Still today → Working
+        if (clockIn && !clockOut && recordDate.isSame(today)) {
+            return 'Working';
+        }
+
         const hours = calculateHours(clockIn, clockOut);
-    
+
         if (hours >= 8) return 'Present';
         return 'Half Day';
     };
@@ -101,6 +125,74 @@ const AttendanceTrackingComponent = () => {
         });
     };
 
+    const getExportData = () => {
+        return attendanceRecords.map(record => ({
+            employeeName: record.employeeName,
+            date: record.date,
+            timeIn: formatTime(record.clockIn),
+            timeOut: record.clockOut ? formatTime(record.clockOut) : 'Not Clocked Out',
+            hours: calculateHours(record.clockIn, record.clockOut),
+            status: calculateStatus(record.date, record.clockIn, record.clockOut),
+        }));
+    };
+
+    const exportToPDF = () => {
+        const doc = new jsPDF();
+    
+        doc.setFontSize(16);
+        doc.text('Attendance Report', 14, 15);
+    
+        doc.setFontSize(10);
+        doc.text(`From: ${fromDate}   To: ${toDate}`, 14, 22);
+    
+        const tableColumn = [
+            'Employee Name',
+            'Date',
+            'Time In',
+            'Time Out',
+            'Hours',
+            'Status',
+        ];
+    
+        const tableRows = getExportData().map(item => [
+            item.employeeName,
+            item.date,
+            item.timeIn,
+            item.timeOut,
+            item.hours,
+            item.status,
+        ]);
+    
+        autoTable(doc, {
+            head: [tableColumn],
+            body: tableRows,
+            startY: 28,
+            styles: { fontSize: 9 },
+            headStyles: { fillColor: [13, 110, 253] },
+        });
+    
+        doc.save(`attendance_${fromDate}_to_${toDate}.pdf`);
+    };    
+
+    const exportToExcel = () => {
+        const worksheet = XLSX.utils.json_to_sheet(getExportData());
+        const workbook = XLSX.utils.book_new();
+    
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Attendance');
+    
+        const excelBuffer = XLSX.write(workbook, {
+            bookType: 'xlsx',
+            type: 'array',
+        });
+    
+        const data = new Blob([excelBuffer], {
+            type:
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        });
+    
+        saveAs(data, `attendance_${fromDate}_to_${toDate}.xlsx`);
+    };    
+
     return (
         <div>
 
@@ -110,7 +202,7 @@ const AttendanceTrackingComponent = () => {
 
             {/* 🔹 Filters */}
             <div className="row mb-3">
-                <div className="col-md-4">
+                <div className="col-md-3">
                     <select
                         className="form-control"
                         value={employeeId}
@@ -125,7 +217,7 @@ const AttendanceTrackingComponent = () => {
                     </select>
                 </div>
 
-                <div className="col-md-3">
+                <div className="col-md-2">
                     <input
                         type="date"
                         className="form-control"
@@ -134,7 +226,7 @@ const AttendanceTrackingComponent = () => {
                     />
                 </div>
 
-                <div className="col-md-3">
+                <div className="col-md-2">
                     <input
                         type="date"
                         className="form-control"
@@ -143,18 +235,18 @@ const AttendanceTrackingComponent = () => {
                     />
                 </div>
 
-                <div className="col-md-2 d-flex gap-2">
-                    <button
-                        className="btn btn-primary w-100 mr-2"
-                        onClick={handleSearch}
-                    >
+                <div className="col-md-5 d-flex gap-2">
+                    <button className="btn btn-primary mr-2" onClick={handleSearch}>
                         Search
                     </button>
-                    <button
-                        className="btn btn-secondary w-100"
-                        onClick={handleReset}
-                    >
+                    <button className="btn btn-secondary mr-2" onClick={handleReset}>
                         Reset
+                    </button>
+                    <button className="btn btn-outline-success mr-2" onClick={exportToExcel} disabled={attendanceRecords.length === 0}>
+                        Export Excel
+                    </button>
+                    <button className="btn btn-outline-danger" onClick={exportToPDF} disabled={attendanceRecords.length === 0}>
+                        Export PDF
                     </button>
                 </div>
             </div>
@@ -196,14 +288,16 @@ const AttendanceTrackingComponent = () => {
                                 <td>
                                     <span
                                         className={
-                                            calculateStatus(record.clockIn, record.clockOut) === 'Present'
+                                            calculateStatus(record.date, record.clockIn, record.clockOut) === 'Present'
                                                 ? 'badge bg-success'
-                                                : calculateStatus(record.clockIn, record.clockOut) === 'Half Day'
+                                                : calculateStatus(record.date, record.clockIn, record.clockOut) === 'Half Day'
                                                     ? 'badge bg-warning text-dark'
-                                                    : 'badge bg-secondary'
+                                                    : calculateStatus(record.date, record.clockIn, record.clockOut) === 'Working'
+                                                        ? 'badge bg-info'
+                                                        : 'badge bg-danger'
                                         }
                                     >
-                                        {calculateStatus(record.clockIn, record.clockOut)}
+                                        {calculateStatus(record.date, record.clockIn, record.clockOut)}
                                     </span>
                                 </td>
                             </tr>

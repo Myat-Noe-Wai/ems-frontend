@@ -54,7 +54,9 @@ const UpdateEmployeeComponent = () => {
         console.log('employee => ' + JSON.stringify(employee));
 
         EmployeeService.updateEmployee(employee, id).then(res => {
-            navigate('/employees'); // Navigate to '/employees' after successful save
+            navigate('/employees', {
+                state: { message: 'Employee updated successfully!' }
+            });
         });
     };
 

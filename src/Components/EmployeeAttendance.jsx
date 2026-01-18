@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import api from '../api/axiosConfig';
 import { useEffect } from 'react';
+import moment from 'moment';
 
 const EmployeeAttendance = () => {
   const [status, setStatus] = useState('');
@@ -71,6 +72,36 @@ const EmployeeAttendance = () => {
     });
   };
 
+  const calculateHours = (clockIn, clockOut) => {
+    if (!clockIn || !clockOut) return '';
+  
+    const start = moment(clockIn);
+    const end = moment(clockOut);
+  
+    const hours = moment.duration(end.diff(start)).asHours();
+    return hours.toFixed(1);
+  };
+  
+  const calculateStatus = (date, clockIn, clockOut) => {
+    if (!clockIn) return 'Absent';
+  
+    const recordDate = moment(date, 'YYYY-MM-DD');
+    const today = moment().startOf('day');
+  
+    if (clockIn && !clockOut && recordDate.isBefore(today)) {
+      return 'Absent';
+    }
+  
+    if (clockIn && !clockOut && recordDate.isSame(today)) {
+      return 'Working';
+    }
+  
+    const hours = calculateHours(clockIn, clockOut);
+  
+    if (hours >= 8) return 'Present';
+    return 'Half Day';
+  };  
+
   return (
     <div>
       <h2 className="text-center">Employee Attendance</h2>
@@ -84,22 +115,47 @@ const EmployeeAttendance = () => {
         <table className="table table-bordered table-striped table-hover">
           <thead className="table-primary">
             <tr>
+              <th>Employee Name</th>
               <th>Date</th>
-              <th>Clock In</th>
-              <th>Clock Out</th>
+              <th>Time In</th>
+              <th>Time Out</th>
+              <th>Hours</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
             {attendanceList.length === 0 ? (
               <tr>
-                <td colSpan="4" className="text-center">No records found</td>
+                <td colSpan="6" className="text-center">No records found</td>
               </tr>
             ) : (
               attendanceList.map((att) => (
                 <tr key={att.id}>
+                  <td>{employeeName}</td>
                   <td>{att.date}</td>
-                  <td>{formatTime(att.clockIn) || '-'}</td>
-                  <td>{formatTime(att.clockOut) || '-'}</td>
+                  <td>{formatTime(att.clockIn)}</td>
+                  <td>
+                    {att.clockOut
+                      ? formatTime(att.clockOut)
+                      : <span className="text-danger">Not Clocked Out</span>
+                    }
+                  </td>
+                  <td>{calculateHours(att.clockIn, att.clockOut)}</td>
+                  <td>
+                    <span
+                      className={
+                        calculateStatus(att.date, att.clockIn, att.clockOut) === 'Present'
+                          ? 'badge bg-success'
+                          : calculateStatus(att.date, att.clockIn, att.clockOut) === 'Half Day'
+                            ? 'badge bg-warning text-dark'
+                            : calculateStatus(att.date, att.clockIn, att.clockOut) === 'Working'
+                              ? 'badge bg-info'
+                              : 'badge bg-danger'
+                      }
+                    >
+                      {calculateStatus(att.date, att.clockIn, att.clockOut)}
+                    </span>
+                  </td>
                 </tr>
               ))
             )}

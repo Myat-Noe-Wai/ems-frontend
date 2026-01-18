@@ -129,7 +129,7 @@ const EmployeeLeaveRequest = () => {
       {/* Leave History */}
       <div className="mt-4">
         <h3>Leave History</h3>
-        <table className="table table-striped table-hover">
+        <table className="table table-bordered table-striped table-hover">
           <thead className="table-primary">
             <tr>
               <th>Leave Type</th>
