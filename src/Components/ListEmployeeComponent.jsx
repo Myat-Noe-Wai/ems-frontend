@@ -15,6 +15,8 @@ const ListEmployeeComponent = () => {
     const currentEmployees = filteredEmployees.slice(indexOfFirstEmployee, indexOfLastEmployee);
     const location = useLocation();
     const [successMessage, setSuccessMessage] = useState('');
+    const [selectedRole, setSelectedRole] = useState('');
+    const [selectedGender, setSelectedGender] = useState('');
 
     useEffect(() => {
         EmployeeService.getEmployees().then((res) => {
@@ -62,21 +64,32 @@ const ListEmployeeComponent = () => {
         navigate(`/update-employee/${id}`);
     }
 
-    const handleFilter = (term) => {
-        if (!term) {
-            setFilteredEmployees(employees);
-            return;
+    const handleFilter = (term, role = selectedRole, gender = selectedGender) => {
+        let filtered = [...employees];
+    
+        // 🔍 Text search
+        if (term) {
+            const lowerTerm = term.toLowerCase();
+            filtered = filtered.filter(emp =>
+                emp.firstName.toLowerCase().includes(lowerTerm) ||
+                emp.lastName.toLowerCase().includes(lowerTerm) ||
+                emp.emailId.toLowerCase().includes(lowerTerm) ||
+                emp.jobTitle.toLowerCase().includes(lowerTerm)
+            );
         }
     
-        const lowerTerm = term.toLowerCase();
-        const filtered = employees.filter(emp =>
-            emp.firstName.toLowerCase().includes(lowerTerm) ||
-            emp.lastName.toLowerCase().includes(lowerTerm) ||
-            emp.emailId.toLowerCase().includes(lowerTerm) ||
-            emp.jobTitle.toLowerCase().includes(lowerTerm)
-        );
+        // 👔 Role filter
+        if (role) {
+            filtered = filtered.filter(emp => emp.jobTitle === role);
+        }
+    
+        // 🚻 Gender filter
+        if (gender) {
+            filtered = filtered.filter(emp => emp.gender === gender);
+        }
     
         setFilteredEmployees(filtered);
+        setCurrentPage(1); // reset pagination
     };
 
     const sortEmployees = (key) => {
@@ -113,8 +126,7 @@ const ListEmployeeComponent = () => {
     };
 
     return (
-        <div>
-            <h2 className="text-center mt-2">Employee List</h2>
+        <div className="mt-3">
             {successMessage && (
                 <div className="alert alert-success alert-dismissible fade show mt-2" role="alert">
                     {successMessage}
@@ -128,10 +140,35 @@ const ListEmployeeComponent = () => {
             <div className="row">
                 <input type="text" className="form-control" placeholder="Search by name, email or role"
                     style={{width: "250px", marginRight: "5px"}} value={searchTerm} onChange={(e) => {
-                        setSearchTerm(e.target.value);
-                        handleFilter(e.target.value);
+                        const value = e.target.value;
+                        setSearchTerm(value);
+                        handleFilter(value);
                     }}
                 />
+                <select className="form-control" style={{ width: "220px", marginRight: "5px" }} value={selectedRole}
+                    onChange={(e) => {
+                        setSelectedRole(e.target.value);
+                        handleFilter(searchTerm, e.target.value, selectedGender);
+                    }}
+                >
+                    <option value="">All Positions</option>
+                    <option value="Java Backend Engineer">Java Backend Engineer</option>
+                    <option value="Golang Developer">Golang Developer</option>
+                    <option value="Web Developer">Web Developer</option>
+                    <option value="QA Tester">QA Tester</option>
+                    <option value="Full Stack Developer">Full Stack Developer</option>
+                </select>
+
+                <select className="form-control" style={{ width: "140px", marginRight: "5px" }} value={selectedGender}
+                    onChange={(e) => {
+                        setSelectedGender(e.target.value);
+                        handleFilter(searchTerm, selectedRole, e.target.value);
+                    }}
+                >
+                    <option value="">All Genders</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
                 <button className="btn btn-primary" style={{marginBottom: "10px"}} onClick={addEmployee}>Add Employee</button>
             </div>
             <div className="row">        

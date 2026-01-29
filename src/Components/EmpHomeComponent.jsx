@@ -19,16 +19,16 @@ class EmpHomeComponent extends Component {
         this.fetchLastTimeIn();
     }
 
-    getEmployeeId = () => {
+    userId = () => {
         return localStorage.getItem('id');
     };
 
     // 🔹 Today’s attendance status
     fetchTodayAttendance = async () => {
         try {
-            const employeeId = this.getEmployeeId();
+            const userId = this.userId();
             const response = await api.get('/attendance/today', {
-                params: { employeeId }
+                params: { userId }
             });
 
             if (response.data?.clockIn) {
@@ -59,9 +59,9 @@ class EmpHomeComponent extends Component {
     // 🔹 Last time-in
     fetchLastTimeIn = async () => {
         try {
-            const employeeId = this.getEmployeeId();
+            const userId = this.userId();
             const response = await api.get('/attendance/last', {
-                params: { employeeId }
+                params: { userId }
             });
 
             if (response.data?.clockIn) {

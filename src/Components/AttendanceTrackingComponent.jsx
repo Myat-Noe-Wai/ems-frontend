@@ -40,6 +40,7 @@ const AttendanceTrackingComponent = () => {
         try {
             const response = await api.get('/v1/employees');
             setEmployees(response.data);
+            console.log(response.data);
         } catch (error) {
             console.error('Error fetching employees:', error);
         }
@@ -52,6 +53,7 @@ const AttendanceTrackingComponent = () => {
         if (employeeId) params.employeeId = employeeId;
         if (fromDate) params.fromDate = fromDate;
         if (toDate) params.toDate = toDate;
+        console.log(params);
 
         fetchAttendanceRecords(params);
     };
@@ -74,43 +76,52 @@ const AttendanceTrackingComponent = () => {
     };
 
     const calculateHours = (clockIn, clockOut) => {
-        if (!clockIn || !clockOut) return '';
+        if (!clockIn || !clockOut) return 0;
     
         const start = moment(clockIn);
         const end = moment(clockOut);
     
-        const hours = moment.duration(end.diff(start)).asHours();
-        return hours.toFixed(1);
-    };
+        return moment.duration(end.diff(start)).asHours();
+    };    
 
     // | Condition                                          | Status   |
     // | -------------------------------------------------- | -------- |
     // | No clockIn                                         | Absent   |
-    // | clockIn exists & no clockOut **AND date is today** | Working  |
-    // | clockIn exists & no clockOut **AND date < today**  | Absent   |
-    // | clockIn + clockOut ≥ 8 hrs                         | Present  |
-    // | clockIn + clockOut < 8 hrs                         | Half Day |
+    // | Clock-in exists, no clock-out & today              | Working  |
+    // | Clock-in exists, no clock-out & past date          | Absent   |
+    // | Clock-in ≤ 09:00 AM AND hours ≥ 9                  | Present  |
+    // | Clock-in after 09:00 AM AND total hours ≥ 4        | Half Day |
     const calculateStatus = (date, clockIn, clockOut) => {
         if (!clockIn) return 'Absent';
-
+    
         const recordDate = moment(date, 'YYYY-MM-DD');
         const today = moment().startOf('day');
-
-        // ⛔ Missed clock-out and day already passed
+    
+        // ⛔ Clocked in but never clocked out (past day)
         if (clockIn && !clockOut && recordDate.isBefore(today)) {
             return 'Absent';
         }
-
-        // ⏳ Still today → Working
+    
+        // ⏳ Still working today
         if (clockIn && !clockOut && recordDate.isSame(today)) {
             return 'Working';
         }
-
+    
         const hours = calculateHours(clockIn, clockOut);
-
-        if (hours >= 8) return 'Present';
-        return 'Half Day';
-    };
+        const late = isLateClockIn(clockIn);
+    
+        // 🚨 Late after 9:00 AM
+        if (late && hours >= 4) {
+            return 'Half Day';
+        }
+    
+        // ✅ On-time & full working hours
+        if (!late && hours >= 9) {
+            return 'Present';
+        }
+    
+        return 'Absent';
+    };    
     
     const formatTime = (dateTime) => {
         if (!dateTime) return '-';
@@ -124,6 +135,15 @@ const AttendanceTrackingComponent = () => {
           timeZone: 'Asia/Yangon',
         });
     };
+
+    const isLateClockIn = (clockIn) => {
+        if (!clockIn) return false;
+
+        const clockInTime = moment(clockIn);
+        const nineAM = moment(clockInTime.format('YYYY-MM-DD') + ' 09:00', 'YYYY-MM-DD HH:mm');
+
+        return clockInTime.isAfter(nineAM);
+    };    
 
     const getExportData = () => {
         return attendanceRecords.map(record => ({
@@ -194,12 +214,7 @@ const AttendanceTrackingComponent = () => {
     };    
 
     return (
-        <div>
-
-            <h2 className="text-center mt-3 mb-3">
-                Attendance Tracking
-            </h2>
-
+        <div className="mt-3">
             {/* 🔹 Filters */}
             <div className="row mb-3">
                 <div className="col-md-3">
@@ -275,7 +290,15 @@ const AttendanceTrackingComponent = () => {
                             <tr key={index}>
                                 <td>{record.employeeName}</td>
                                 <td>{record.date}</td>
-                                <td>{formatTime(record.clockIn)}</td>
+                                <td>
+                                    {record.clockIn ? (
+                                        <span className={isLateClockIn(record.clockIn) ? 'text-danger fw-bold' : ''}>
+                                            {formatTime(record.clockIn)}
+                                        </span>
+                                    ) : (
+                                        '-'
+                                    )}
+                                </td>
                                 <td>
                                     {record.clockOut
                                         ? formatTime(record.clockOut)
@@ -283,7 +306,9 @@ const AttendanceTrackingComponent = () => {
                                     }
                                 </td>
                                 <td>
-                                    {calculateHours(record.clockIn, record.clockOut)}
+                                    {record.clockOut
+                                        ? calculateHours(record.clockIn, record.clockOut).toFixed(1)
+                                        : '-'}
                                 </td>
                                 <td>
                                     <span

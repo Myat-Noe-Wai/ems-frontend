@@ -65,6 +65,20 @@ const EmployeeLeaveRequest = () => {
     }
   };
 
+  // 🔹 Return Bootstrap badge for status
+  const getStatusBadge = (status) => {
+    switch (status) {
+      case 'Pending':
+        return <span className="badge bg-warning text-dark">{status}</span>;
+      case 'Approved':
+        return <span className="badge bg-success">{status}</span>;
+      case 'Rejected':
+        return <span className="badge bg-danger">{status}</span>;
+      default:
+        return <span className="badge bg-secondary">{status}</span>;
+    }
+  };
+
   return (
     <div className="container">
       {/* Apply Leave */}
@@ -144,7 +158,7 @@ const EmployeeLeaveRequest = () => {
                 <td>{leave.leaveType}</td>
                 <td>{new Date(leave.startDate).toLocaleDateString()}</td>
                 <td>{new Date(leave.endDate).toLocaleDateString()}</td>
-                <td>{leave.status}</td>
+                <td>{getStatusBadge(leave.status)}</td>
               </tr>
             ))}
           </tbody>

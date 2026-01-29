@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const HeaderComponent = ({ setIsAuthenticated, setRole }) => {
@@ -8,6 +8,8 @@ const HeaderComponent = ({ setIsAuthenticated, setRole }) => {
 
     const userName = localStorage.getItem('userName');
     const email = localStorage.getItem('email');
+    const menuRef = useRef(null);
+    const iconRef = useRef(null);
 
     const handleLinkClick = (path) => {
         setActiveLink(path);  // Update the active link state
@@ -24,6 +26,24 @@ const HeaderComponent = ({ setIsAuthenticated, setRole }) => {
         localStorage.clear();
         navigate('/login', { replace: true });
     };
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                menuRef.current &&
+                !menuRef.current.contains(event.target) &&
+                iconRef.current &&
+                !iconRef.current.contains(event.target)
+            ) {
+                setShowMenu(false);
+            }
+        };
+    
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     return (
         <nav className="navbar navbar-dark navbar-expand-md bg-primary px-3">
@@ -79,6 +99,7 @@ const HeaderComponent = ({ setIsAuthenticated, setRole }) => {
                 {/* ACCOUNT ICON */}
                 <div className="position-relative">
                     <div
+                        ref={iconRef}
                         onClick={toggleMenu}
                         className="rounded-circle bg-light text-primary d-flex justify-content-center align-items-center"
                         style={{
@@ -93,6 +114,7 @@ const HeaderComponent = ({ setIsAuthenticated, setRole }) => {
 
                     {showMenu && (
                         <div
+                            ref={menuRef}
                             className="position-absolute bg-white shadow rounded p-3"
                             style={{ right: 0, top: '45px', minWidth: '140px', zIndex: 2000 }}
                         >

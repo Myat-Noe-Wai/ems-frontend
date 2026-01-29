@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const HeaderComponent = ({ setIsAuthenticated, setRole }) => {
@@ -9,6 +9,8 @@ const HeaderComponent = ({ setIsAuthenticated, setRole }) => {
     // read user info
     const userName = localStorage.getItem('userName');
     const email = localStorage.getItem('email');
+    const menuRef = useRef(null);
+    const iconRef = useRef(null);
 
     const handleLinkClick = (path) => {
         setActiveLink(path);
@@ -28,6 +30,24 @@ const HeaderComponent = ({ setIsAuthenticated, setRole }) => {
 
         navigate('/login', { replace: true });
     };
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                menuRef.current &&
+                !menuRef.current.contains(event.target) &&
+                iconRef.current &&
+                !iconRef.current.contains(event.target)
+            ) {
+                setShowAccountMenu(false);
+            }
+        };
+        
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     return (
         <div>
@@ -103,6 +123,7 @@ const HeaderComponent = ({ setIsAuthenticated, setRole }) => {
 
                     <div className="position-relative mr-3">
                         <div
+                            ref={iconRef}
                             onClick={() => setShowAccountMenu(!showAccountMenu)}
                             className="rounded-circle bg-light text-primary d-flex justify-content-center align-items-center"
                             style={{
@@ -117,6 +138,7 @@ const HeaderComponent = ({ setIsAuthenticated, setRole }) => {
 
                         {showAccountMenu && (
                             <div
+                                ref={menuRef}
                                 className="position-absolute bg-white shadow rounded p-3"
                                 style={{
                                     right: 0,

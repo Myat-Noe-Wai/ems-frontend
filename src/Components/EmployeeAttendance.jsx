@@ -20,7 +20,7 @@ const EmployeeAttendance = () => {
     try {
       // Store the response in 'res'
       const res = await api.post('/attendance/clock-in', {
-        employeeId: Number(userId),
+        userId: Number(userId),
         employeeName: employeeName,
       });
 
@@ -73,13 +73,12 @@ const EmployeeAttendance = () => {
   };
 
   const calculateHours = (clockIn, clockOut) => {
-    if (!clockIn || !clockOut) return '';
-  
+    if (!clockIn || !clockOut) return 0;
+
     const start = moment(clockIn);
     const end = moment(clockOut);
-  
-    const hours = moment.duration(end.diff(start)).asHours();
-    return hours.toFixed(1);
+
+    return moment.duration(end.diff(start)).asHours(); // NUMBER
   };
   
   const calculateStatus = (date, clockIn, clockOut) => {
@@ -88,23 +87,46 @@ const EmployeeAttendance = () => {
     const recordDate = moment(date, 'YYYY-MM-DD');
     const today = moment().startOf('day');
   
+    // ⛔ No clock-out & past date
     if (clockIn && !clockOut && recordDate.isBefore(today)) {
       return 'Absent';
     }
   
+    // ⏳ Still working today
     if (clockIn && !clockOut && recordDate.isSame(today)) {
       return 'Working';
     }
   
     const hours = calculateHours(clockIn, clockOut);
+    const late = isLateClockIn(clockIn);
   
-    if (hours >= 8) return 'Present';
-    return 'Half Day';
+    // 🚨 Late after 9AM
+    if (late && hours >= 4) {
+      return 'Half Day';
+    }
+  
+    // ✅ On-time full day
+    if (!late && hours >= 9) {
+      return 'Present';
+    }
+  
+    return 'Absent';
+  };  
+
+  const isLateClockIn = (clockIn) => {
+    if (!clockIn) return false;
+  
+    const clockInTime = moment(clockIn);
+    const nineAM = moment(
+      clockInTime.format('YYYY-MM-DD') + ' 09:00',
+      'YYYY-MM-DD HH:mm'
+    );
+  
+    return clockInTime.isAfter(nineAM);
   };  
 
   return (
-    <div>
-      <h2 className="text-center">Employee Attendance</h2>
+    <div className="mt-3">
       <div style={{ textAlign: "center" }}>
         <button className="btn btn-success mr-2" onClick={handleClockIn}>Time In</button>
         <button className="btn btn-success" onClick={handleClockOut}>Time Out</button>
@@ -133,14 +155,24 @@ const EmployeeAttendance = () => {
                 <tr key={att.id}>
                   <td>{employeeName}</td>
                   <td>{att.date}</td>
-                  <td>{formatTime(att.clockIn)}</td>
+                  <td>
+                    {att.clockIn ? (
+                      <span className={isLateClockIn(att.clockIn) ? 'text-danger fw-bold' : ''}>
+                        {formatTime(att.clockIn)}
+                      </span>
+                    ) : (
+                      '-'
+                    )}
+                  </td>
                   <td>
                     {att.clockOut
                       ? formatTime(att.clockOut)
                       : <span className="text-danger">Not Clocked Out</span>
                     }
                   </td>
-                  <td>{calculateHours(att.clockIn, att.clockOut)}</td>
+                  <td>
+                    {att.clockOut ? calculateHours(att.clockIn, att.clockOut).toFixed(1) : '-'}
+                  </td>
                   <td>
                     <span
                       className={

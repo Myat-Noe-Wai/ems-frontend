@@ -85,8 +85,6 @@ function JobTitleManagement() {
 
   return (
     <div>
-      <h2 className="text-center mt-2">Job Title Management</h2>
-
       {/* ✅ HORIZONTAL FORM */}
       <div className="d-flex align-items-start mt-4 mb-3 gap-3">
 

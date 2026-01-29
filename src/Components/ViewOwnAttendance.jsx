@@ -7,7 +7,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 
 const ViewOwnAttendance = () => {
-    const employeeId = localStorage.getItem('id');
+    const userId = localStorage.getItem('id');
 
     const [month, setMonth] = useState(() => {
         const now = new Date();
@@ -23,7 +23,7 @@ const ViewOwnAttendance = () => {
     const loadAttendance = async () => {
         try {
             const res = await api.get('/attendance/my/month', {
-                params: { month, employeeId }
+                params: { month, userId }
             });
             setRecords(res.data);
         } catch (error) {
