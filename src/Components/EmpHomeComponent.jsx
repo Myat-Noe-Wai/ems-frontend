@@ -45,10 +45,11 @@ class EmpHomeComponent extends Component {
     // 🔹 Remaining leave days
     fetchRemainingLeaves = async () => {
         try {
-            const employeeId = this.getEmployeeId();
+            const userId = localStorage.getItem('id');
             const response = await api.get('/leave-requests/leave-balance', {
-                params: { employeeId }
+                params: { userId }
             });
+            console.log("Remaining leaves response: " + response);
 
             this.setState({ remainingLeaves: response.data.remainingDays });
         } catch (error) {

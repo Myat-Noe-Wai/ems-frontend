@@ -70,7 +70,7 @@ function App() {
                             <HomeComponent />
                           </div>
 
-                          <FooterComponent />
+                          {/* <FooterComponent /> */}
                         </div>
                       }/>
                       <Route path="/" element={
@@ -80,7 +80,7 @@ function App() {
                             <div className="page-content">
                               <HomeComponent />
                             </div>
-                            <FooterComponent />
+                            {/* <FooterComponent /> */}
                           </div>
                         </>
                       }/>
@@ -91,7 +91,7 @@ function App() {
                             <div className="page-content">
                               <JobTitleManagement />
                             </div>
-                            <FooterComponent />
+                            {/* <FooterComponent /> */}
                           </div>
                         </>
                       }/>
@@ -102,7 +102,7 @@ function App() {
                             <div className="page-content">
                               <ListEmployeeComponent />
                             </div>
-                            <FooterComponent />
+                            {/* <FooterComponent /> */}
                           </div>
                         </>
                       }/>
@@ -110,21 +110,21 @@ function App() {
                         <>
                           <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
                           <CreateEmployeeComponent />
-                          <FooterComponent />
+                          {/* <FooterComponent /> */}
                         </>
                       }/>
                     <Route path="/update-employee/:id" element={
                         <>
                           <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
                           <UpdateEmployeeComponent />
-                          <FooterComponent />
+                          {/* <FooterComponent /> */}
                         </>
                       }/>
                     <Route path="/view-employee/:id" element={
                         <>
                           <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
                           <ViewEmployeeComponent />
-                          <FooterComponent />
+                          {/* <FooterComponent /> */}
                         </>
                       }/>
                     <Route path="/attendance" element={
@@ -134,7 +134,7 @@ function App() {
                             <div className="page-content">
                               <AttendanceTrackingComponent />
                             </div>
-                            <FooterComponent />
+                            {/* <FooterComponent /> */}
                           </div>
                         </>
                       }/>
@@ -145,7 +145,7 @@ function App() {
                             <div className="page-content">
                               <LeaveRequest />
                             </div>
-                            <FooterComponent />
+                            {/* <FooterComponent /> */}
                           </div>
                         </>
                       }/>
@@ -156,7 +156,7 @@ function App() {
                             <div className="page-content">
                               <EmployeeAttendance />
                             </div>
-                            <FooterComponent />
+                            {/* <FooterComponent /> */}
                           </div>
                         </>
                       }/>
@@ -170,7 +170,7 @@ function App() {
                               <div className="page-content">
                                 <EmpHomeComponent />
                               </div>
-                              <FooterComponent />
+                              {/* <FooterComponent /> */}
                             </div>
                           </>
                         }/>
@@ -181,7 +181,7 @@ function App() {
                               <div className="page-content">
                                 <EmpHomeComponent />
                               </div>
-                              <FooterComponent />
+                              {/* <FooterComponent /> */}
                             </div>
                           </>
                         }/>
@@ -192,7 +192,7 @@ function App() {
                               <div className="page-content">
                                 <EmployeeAttendance />
                               </div>
-                              <FooterComponent />
+                              {/* <FooterComponent /> */}
                             </div>
                           </>
                         }/>
@@ -203,7 +203,7 @@ function App() {
                               <div className="page-content">
                                 <EmployeeLeaveRequest />
                               </div>
-                              <FooterComponent />
+                              {/* <FooterComponent /> */}
                             </div>
                           </>
                         }/>
@@ -214,7 +214,7 @@ function App() {
                               <div className="page-content">
                                 <ViewOwnAttendance />
                               </div>
-                              <FooterComponent />
+                              {/* <FooterComponent /> */}
                             </div>
                           </>
                         }/>

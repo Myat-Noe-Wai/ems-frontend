@@ -55,13 +55,15 @@ class HomeComponent extends Component {
     fetchPendingLeaves = async () => {
         try {
             const response = await api.get('/leave-requests', {
-                params: { status: 'PENDING' } // assuming backend supports this filter
+                params: { status: 'Pending', page: 0, size: 1000 } // get all pending
             });
-            this.setState({ pendingLeaves: response.data.length });
+            // Use totalElements from paginated response
+            this.setState({ pendingLeaves: response.data.totalElements });
+            console.log("Pending leaves: " + response.data.totalElements);
         } catch (error) {
             console.error('Error fetching pending leave requests:', error);
         }
-    };
+    };    
 
     // 🔹 Fetch recent attendance (last 5 records)
     fetchRecentAttendance = async () => {
@@ -103,9 +105,7 @@ class HomeComponent extends Component {
         const { totalEmployees, todayPresent, todayAbsent, pendingLeaves, recentAttendance } = this.state;
 
         return (
-            <div className="container mt-4">
-                <h2>Admin Dashboard</h2>
-                
+            <div className="container mt-4">                
                 <div className="row my-4">
                     <div className="col-md-3">
                         <div className="card text-white bg-primary mb-3">
@@ -142,7 +142,7 @@ class HomeComponent extends Component {
                 </div>
 
                 {/* 🔹 Recent Attendance Table */}
-                <div className="mt-4">
+                <div className="">
                     <h4>Recent Attendance</h4>
                     <table className="table table-bordered table-striped table-hover">
                         <thead className="table-primary">
