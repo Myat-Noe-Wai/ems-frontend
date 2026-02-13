@@ -1,21 +1,20 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import api from '../api/axiosConfig';
 
 function Register({ setIsAuthenticated }) {
   const [employeename, setEmployeename] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   async function save(event) {
     event.preventDefault();
     try {
-      const res = await axios.post(`${API_BASE_URL}/v1/user/save`, {
+      const res = await api.post("/v1/user/save", {
         username: employeename,
-        email: email,
-        password: password,
+        email,
+        password,
       });
 
       console.log(res.data);

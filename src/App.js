@@ -1,7 +1,5 @@
-import logo from './logo.svg';
 import './App.css';
 import HeaderComponent from './Components/HeaderComponent';
-import FooterComponent from './Components/FooterComponent';
 import ListEmployeeComponent from './Components/ListEmployeeComponent';
 import CreateEmployeeComponent from './Components/CreateEmployeeComponent';
 import ViewEmployeeComponent from './Components/ViewEmployeeComponent';
@@ -26,23 +24,16 @@ function App() {
   );
   // const role = localStorage.getItem('role');
   const [role, setRole] = useState(localStorage.getItem('role'));
-  console.log("authen");
-  console.log(isAuthenticated);
-  console.log(role);
 
   // Update localStorage when authentication status changes
   useEffect(() => {
     localStorage.setItem('isAuthenticated', isAuthenticated);
   }, [isAuthenticated]);
-  console.log("isAuthenticated");
-  console.log(localStorage.getItem('isAuthenticated'));
 
   // Update role when user logs in
   useEffect(() => {
     setRole(localStorage.getItem('role'));
   }, [isAuthenticated]);
-  console.log("role");
-  console.log(localStorage.getItem('role'));
 
   return (
     <div>

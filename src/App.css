@@ -179,3 +179,26 @@ html, body, #root {
 .total-hours-box strong {
   font-weight: 600;
 }
+
+/* 🔵 Week of ... row */
+.week-row td {
+  background-color: #DAE6FB;
+  color: #1e3a8a;
+  font-weight: bold;
+  font-size: 18px;  
+}
+
+.text-start{
+  text-align: left;
+}
+
+.text-end{
+  text-align: right;
+}
+
+/* 🔷 Employee | Date | Time In | ... header row */
+.column-header td {
+  background-color: #C8DAFC;
+  color: #0f172a;
+  font-weight: 600;
+}

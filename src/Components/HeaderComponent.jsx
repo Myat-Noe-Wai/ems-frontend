@@ -1,10 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { startSessionTimer, stopSessionTimer } from "../utils/sessionTimeout";
+import { logoutUser } from "../utils/logout";
 
 const HeaderComponent = ({ setIsAuthenticated, setRole }) => {
     const navigate = useNavigate();
     const [activeLink, setActiveLink] = useState('/');   // existing
     const [showAccountMenu, setShowAccountMenu] = useState(false); // ✅ ADDED
+    const [showWarning, setShowWarning] = useState(false);
 
     // read user info
     const userName = localStorage.getItem('userName');
@@ -18,18 +21,26 @@ const HeaderComponent = ({ setIsAuthenticated, setRole }) => {
     };
 
     const logout = () => {
+        stopSessionTimer(); // ✅ stop background timer
         setIsAuthenticated(false);
         setRole(null);
-
-        localStorage.removeItem('isAuthenticated');
-        localStorage.removeItem('role');
-        localStorage.removeItem('id');
-        localStorage.removeItem('empName');
-        localStorage.removeItem('userName');
-        localStorage.removeItem('email');
-
+        localStorage.clear();
         navigate('/login', { replace: true });
     };
+
+    // ✅ SESSION TIMER EFFECT (ADD THIS)
+    useEffect(() => {
+        const isAuth = localStorage.getItem("isAuthenticated");
+    
+        if (isAuth) {
+            startSessionTimer(
+                () => logoutUser(navigate, setIsAuthenticated),
+                () => setShowWarning(true)
+            );
+        }
+    
+        return () => stopSessionTimer();
+    }, []);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -48,6 +59,21 @@ const HeaderComponent = ({ setIsAuthenticated, setRole }) => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
+
+    // Hide warning popup on activity
+    useEffect(() => {
+        if (!showWarning) return;
+
+        const hideWarning = () => setShowWarning(false);
+
+        window.addEventListener("mousemove", hideWarning);
+        window.addEventListener("keydown", hideWarning);
+
+        return () => {
+            window.removeEventListener("mousemove", hideWarning);
+            window.removeEventListener("keydown", hideWarning);
+        };
+    }, [showWarning]);
 
     return (
         <div>
@@ -85,18 +111,7 @@ const HeaderComponent = ({ setIsAuthenticated, setRole }) => {
                             >
                                 Manage Employee
                             </a>
-                        </li>
-
-                        <li className="nav-item">
-                            <a
-                                className="nav-link"
-                                href="#"
-                                onClick={() => handleLinkClick('/jobtitles')}
-                                style={{ fontWeight: activeLink === '/jobtitles' ? 'bold' : 'normal', color: "white" }}
-                            >
-                                Manage Job Titles
-                            </a>
-                        </li>
+                        </li>                        
 
                         <li className="nav-item">
                             <a
@@ -117,6 +132,17 @@ const HeaderComponent = ({ setIsAuthenticated, setRole }) => {
                                 style={{ fontWeight: activeLink === '/leave-request' ? 'bold' : 'normal', color: "white" }}
                             >
                                 Manage Leave Request
+                            </a>
+                        </li>
+                        
+                        <li className="nav-item">
+                            <a
+                                className="nav-link"
+                                href="#"
+                                onClick={() => handleLinkClick('/jobtitles')}
+                                style={{ fontWeight: activeLink === '/jobtitles' ? 'bold' : 'normal', color: "white" }}
+                            >
+                                Manage Job Titles
                             </a>
                         </li>
                     </ul>
@@ -163,6 +189,17 @@ const HeaderComponent = ({ setIsAuthenticated, setRole }) => {
                     </div>
                 </div>
             </nav>
+
+            {/* ⚠ WARNING MODAL */}
+            {showWarning && (
+                <div style={{ position: "fixed", top:0, left:0, width:"100%", height:"100%", background:"rgba(0,0,0,0.4)", display:"flex", alignItems:"center", justifyContent:"center", zIndex:9999 }}>
+                    <div style={{ background:"white", padding:"25px", borderRadius:"10px", textAlign:"center", width:"350px" }}>
+                        <h4>Session Expiring</h4>
+                        <p>You will be logged out in 60 seconds due to inactivity.</p>
+                        <button className="btn btn-primary" onClick={() => setShowWarning(false)}>Stay Logged In</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

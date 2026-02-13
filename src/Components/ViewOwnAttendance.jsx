@@ -156,14 +156,14 @@ const ViewOwnAttendance = () => {
               {/* Summary Cards */}
               <div className="row g-3 mb-4">
                 <SummaryCard title="Present" value={summary.present} color="success" icon="check-lg" />
-                <SummaryCard title="Half Day" value={summary.halfDay} color="danger" icon="clock" />
-                <SummaryCard title="Absent" value={summary.absent} color="warning" icon="x-lg" />
+                <SummaryCard title="Absent" value={summary.halfDay} color="danger" icon="x-lg" />
+                <SummaryCard title="Half Day" value={summary.absent} color="warning" icon="clock" />
                 <SummaryCard title="Working" value={summary.totalHours.toFixed(1)} color="primary" icon="briefcase" />
               </div>
     
               {/* Table */}
               <div className="table-responsive">
-                <table className="table align-middle table-hover">
+                <table className="table align-middle table-hover table-bordered">
                   <thead className="table-primary">
                     <tr>
                       <th>Date</th>

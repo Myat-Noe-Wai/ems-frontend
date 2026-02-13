@@ -132,6 +132,19 @@ const EmployeeAttendance = () => {
     );
   
     return clockInTime.isAfter(nineAM);
+  };
+  
+  const calculateWeekTotal = (weekStartDate) => {
+    return attendanceList
+      .filter(att =>
+        moment(att.date).startOf('week').format('YYYY-MM-DD') === weekStartDate &&
+        att.clockIn &&
+        att.clockOut
+      )
+      .reduce((sum, att) => {
+        return sum + calculateHours(att.clockIn, att.clockOut);
+      }, 0)
+      .toFixed(1);
   };  
 
   return (
@@ -160,77 +173,107 @@ const EmployeeAttendance = () => {
   
           {/* ===== Attendance Table ===== */}
           <div className="table-responsive">
-            <table className="table table-bordered table-hover table-striped align-middle text-center">
-              <thead className="table-primary">
-                <tr>
-                  <th>Employee</th>
-                  <th>Date</th>
-                  <th>Time In</th>
-                  <th>Time Out</th>
-                  <th>Hours</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
+            <table className="table table-bordered table-hover table-striped align-middle text-center">              
               <tbody>
                 {!attendanceList || attendanceList.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="text-muted">
+                    <td colSpan="6" className="text-muted text-center">
                       No records found
                     </td>
                   </tr>
                 ) : (
-                  attendanceList.map((att) => (
-                    <tr key={att.id}>
-                      <td className="fw-semibold">{employeeName}</td>
-                      <td>{att.date}</td>
-  
-                      <td>
-                        {att.clockIn ? (
-                          <span
-                            className={
-                              isLateClockIn(att.clockIn)
-                                ? 'text-danger fw-bold'
-                                : ''
-                            }
-                          >
-                            {formatTime(att.clockIn)}
-                          </span>
-                        ) : (
-                          '-'
-                        )}
-                      </td>
-  
-                      <td>
-                        {att.clockOut ? (
-                          formatTime(att.clockOut)
-                        ) : (
-                          <span className="text-danger">Not Clocked Out</span>
-                        )}
-                      </td>
-  
-                      <td>
-                        {att.clockOut
-                          ? calculateHours(att.clockIn, att.clockOut).toFixed(1)
-                          : '-'}
-                      </td>
-  
-                      <td>
-                        <span
-                          className={
-                            calculateStatus(att.date, att.clockIn, att.clockOut) === 'Present'
-                              ? 'badge bg-success'
-                              : calculateStatus(att.date, att.clockIn, att.clockOut) === 'Half Day'
-                              ? 'badge bg-warning text-dark'
-                              : calculateStatus(att.date, att.clockIn, att.clockOut) === 'Working'
-                              ? 'badge bg-info'
-                              : 'badge bg-danger'
-                          }
-                        >
-                          {calculateStatus(att.date, att.clockIn, att.clockOut)}
-                        </span>
-                      </td>
-                    </tr>
-                  ))
+                  (() => {
+                    let lastWeek = null;
+
+                    return attendanceList.map((att) => {
+                      const currentWeek = moment(att.date)
+                        .startOf('week')
+                        .format('YYYY-MM-DD');
+
+                      const isNewWeek = currentWeek !== lastWeek;
+                      lastWeek = currentWeek;
+
+                      return (
+                        <React.Fragment key={att.id}>
+                          {/* 🔵 Week Row */}
+                          {isNewWeek && (
+                            <>
+                              <tr className="week-row fw-bold">
+                                <td colSpan="3" className="text-start">
+                                  Week of {currentWeek}
+                                </td>
+                                <td colSpan="3" className="text-end">
+                                  Week total : {calculateWeekTotal(currentWeek)} hrs
+                                </td>
+                              </tr>
+
+                              {/* 🔷 Header row per week */}
+                              <tr className="column-header fw-semibold">
+                                <td>Employee</td>
+                                <td>Date</td>
+                                <td>Time In</td>
+                                <td>Time Out</td>
+                                <td>Hours</td>
+                                <td>Status</td>
+                              </tr>
+                            </>
+                          )}
+
+                          {/* 🧾 Attendance row */}
+                          <tr>
+                            <td className="fw-semibold">{employeeName}</td>
+                            <td>{att.date}</td>
+
+                            <td>
+                              {att.clockIn ? (
+                                <span
+                                  className={
+                                    isLateClockIn(att.clockIn)
+                                      ? 'text-danger fw-bold'
+                                      : ''
+                                  }
+                                >
+                                  {formatTime(att.clockIn)}
+                                </span>
+                              ) : (
+                                '-'
+                              )}
+                            </td>
+
+                            <td>
+                              {att.clockOut ? (
+                                formatTime(att.clockOut)
+                              ) : (
+                                <span className="text-danger">Not Clocked Out</span>
+                              )}
+                            </td>
+
+                            <td>
+                              {att.clockOut
+                                ? calculateHours(att.clockIn, att.clockOut).toFixed(1)
+                                : '-'}
+                            </td>
+
+                            <td>
+                              <span
+                                className={
+                                  calculateStatus(att.date, att.clockIn, att.clockOut) === 'Present'
+                                    ? 'badge bg-success'
+                                    : calculateStatus(att.date, att.clockIn, att.clockOut) === 'Half Day'
+                                    ? 'badge bg-warning text-dark'
+                                    : calculateStatus(att.date, att.clockIn, att.clockOut) === 'Working'
+                                    ? 'badge bg-info'
+                                    : 'badge bg-danger'
+                                }
+                              >
+                                {calculateStatus(att.date, att.clockIn, att.clockOut)}
+                              </span>
+                            </td>
+                          </tr>
+                        </React.Fragment>
+                      );
+                    });
+                  })()
                 )}
               </tbody>
             </table>

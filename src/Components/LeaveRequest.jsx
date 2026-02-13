@@ -14,7 +14,7 @@ const LeaveRequests = () => {
 
   useEffect(() => {
     fetchLeaveRequests();
-  }, [page, size]);
+  }, [page, size, firstName, lastName, status, fromDate, toDate]);
 
   const fetchLeaveRequests = async () => {
     try {

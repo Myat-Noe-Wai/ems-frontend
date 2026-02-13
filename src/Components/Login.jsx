@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/axiosConfig';
+import { startSessionTimer } from "../utils/sessionTimeout";
+import { logoutUser } from "../utils/logout";
 
 function Login({ setIsAuthenticated }) {
   const [email, setEmail] = useState("");
@@ -11,7 +13,7 @@ function Login({ setIsAuthenticated }) {
   async function login(event) {
     event.preventDefault();
     try {
-      const res = await axios.post(`${API_BASE_URL}/v1/user/login`, {
+      const res = await api.post("/v1/user/login", {
         email: email,
         password: password,
       });
@@ -25,12 +27,16 @@ function Login({ setIsAuthenticated }) {
 
       // Save authentication info
       setIsAuthenticated(true);
-      localStorage.setItem('isAuthenticated', 'true');      
+      localStorage.setItem('isAuthenticated', 'true');
+
+      startSessionTimer(() => logoutUser(navigate, setIsAuthenticated));
+
       localStorage.setItem('id', res.data.id);
       localStorage.setItem('userName', res.data.userName);
       localStorage.setItem('email', res.data.email);
       localStorage.setItem('role', res.data.role);
       localStorage.setItem('accessToken', res.data.accessToken);
+      localStorage.setItem('refreshToken', res.data.refreshToken);
 
       // Navigate based on role
       if (res.data.role === 'admin') {
