@@ -1,0 +1,171 @@
+.payslip-container {
+    padding: 20px;
+    background: #f5f7fb;
+    min-height: 100vh;
+  }
+  
+  .page-title {
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+  
+  .filter-card {
+    display: flex;          /* horizontal row */
+    flex-direction: row;    /* make sure it's row */
+    gap: 15px;              /* space between boxes */
+    align-items: center;    /* vertically align boxes */
+    flex-wrap: nowrap;      /* prevent wrapping to next line */
+  }
+  
+  .filter-card select,
+  .filter-card input {
+    width: 200px;           /* fixed width for each box */
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+  }  
+  
+  .form-card {
+    display: flex;
+    gap: 40px;
+  }
+  
+  .column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .column input {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+  }
+  
+  .action-center {
+    text-align: center;
+  }
+  
+  .btn-calculate {
+    background: #017BFE;
+    color: white;
+    padding: 10px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 140px;
+  }
+  
+  .btn-confirm {
+    background: #017BFE;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    margin-top: 15px;
+    cursor: pointer;
+  }
+
+  /* .btn-primary {
+    background-color: #4573D9 !important;
+  }
+  .bg-primary {
+    background-color: #3D63CA !important;
+  } */  
+  
+  .form-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .form-row label {
+    width: 180px;   /* fixed width for alignment */
+    font-weight: 500;
+  }
+  
+  .form-row input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+  }
+  
+  .preview-wrapper{
+    display:flex;
+    gap:30px;
+    align-items:center;
+  }  
+  
+  .preview-left{
+    flex:1;
+  }
+  
+  .preview-right{
+    flex:1;
+  }
+  
+  .preview-right img{
+    width: 650px;
+    margin-top:15px;
+  }
+  
+  /* rows */
+  .preview-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin:12px 0;
+    font-size:16px;
+  }
+  
+  .preview-row strong{
+    margin-left:auto;
+  }
+  
+  /* icons */
+  .icon{
+    font-size:20px;
+  }
+  
+  .earnings{ color:#2ecc71; }
+  .deductions{ color:#e74c3c; }
+  .net{ color:#27ae60; }
+  
+  /* net salary highlight */
+  .preview-row.net{
+    border-top:1px solid #eee;
+    padding-top:15px;
+    font-size:18px;
+    font-weight:600;
+  }
+
+  .image-container{
+    position:relative;
+    width:100%;
+  }
+
+  .preview-image{
+    width:100%;
+    display:block;
+    border-radius:12px;
+  }
+  .overlay-text{
+    position:absolute;
+    top:35%;
+    left:10%;
+    max-width:300px;
+    color:#333;
+    font-size:15px;
+    line-height:1.5;
+  }
+  

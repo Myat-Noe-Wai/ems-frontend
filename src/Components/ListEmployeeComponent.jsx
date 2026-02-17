@@ -9,7 +9,7 @@ const ListEmployeeComponent = () => {
     const [filteredEmployees, setFilteredEmployees] = useState([]);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
     const [currentPage, setCurrentPage] = useState(1);
-    const [employeesPerPage] = useState(5); // show 5 per page (you can adjust)
+    const [employeesPerPage] = useState(6); // show 5 per page (you can adjust)
     const indexOfLastEmployee = currentPage * employeesPerPage;
     const indexOfFirstEmployee = indexOfLastEmployee - employeesPerPage;
     const currentEmployees = filteredEmployees.slice(indexOfFirstEmployee, indexOfLastEmployee);
@@ -169,7 +169,7 @@ const ListEmployeeComponent = () => {
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
                 </select>
-                <button className="btn btn-primary" style={{marginBottom: "10px"}} onClick={addEmployee}>Add Employee</button>
+                <button className="btn btn-outline-primary" style={{marginBottom: "10px"}} onClick={addEmployee}>Add Employee</button>
             </div>
             <div className="row">        
                 <table className="table table-striped table-bordered table-hover">
@@ -247,7 +247,7 @@ const ListEmployeeComponent = () => {
                     </tbody>
                 </table>
             </div>
-            <div className="d-flex justify-content-center mt-3">
+            <div className="d-flex justify-content-center">
                 {Array.from({ length: Math.ceil(filteredEmployees.length / employeesPerPage) }, (_, i) => (
                     <button
                         key={i + 1}

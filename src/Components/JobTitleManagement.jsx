@@ -122,7 +122,7 @@ function JobTitleManagement() {
 
         {/* Button */}
         <button
-          className="btn btn-primary"
+          className="btn btn-outline-primary"
           style={{ height: '38px' }}
           onClick={saveRole}
         >
@@ -148,11 +148,11 @@ function JobTitleManagement() {
               <td>{role.name}</td>
               <td>{role.description}</td>
               <td>
-                <button className="btn btn-success mr-2" onClick={() => handleEdit(role)}>
+                <button className="btn btn-outline-success mr-2" onClick={() => handleEdit(role)}>
                   Edit
                 </button>
                 <button
-                  className="btn btn-danger ms-2"
+                  className="btn btn-outline-danger ms-2"
                   onClick={() => handleDelete(role.id)}
                 >
                   Delete

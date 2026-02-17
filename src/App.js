@@ -17,6 +17,8 @@ import EmpHeaderComponent from './Components/EmpHeaderComponent';
 import React, { useState,useEffect } from 'react';
 import EmployeeLeaveRequest from './Components/EmployeeLeaveRequest';
 import ViewOwnAttendance from './Components/ViewOwnAttendance';
+import GeneratePayslip from './Components/GeneratePayslip';
+import AdminPayslipList from './Components/AdminPayslipList';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -146,6 +148,28 @@ function App() {
                             <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
                             <div className="page-content">
                               <EmployeeAttendance />
+                            </div>
+                            {/* <FooterComponent /> */}
+                          </div>
+                        </>
+                      }/>
+                      <Route path="/generate-payslip" element={
+                        <>
+                          <div className="app-layout">
+                            <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
+                            <div className="page-content">
+                              <GeneratePayslip />
+                            </div>
+                            {/* <FooterComponent /> */}
+                          </div>
+                        </>
+                      }/>
+                      <Route path="/admin/payslips" element={
+                        <>
+                          <div className="app-layout">
+                            <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
+                            <div className="page-content">
+                              <AdminPayslipList />
                             </div>
                             {/* <FooterComponent /> */}
                           </div>

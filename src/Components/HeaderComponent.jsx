@@ -145,6 +145,26 @@ const HeaderComponent = ({ setIsAuthenticated, setRole }) => {
                                 Manage Job Titles
                             </a>
                         </li>
+                        <li className="nav-item">
+                            <a
+                                className="nav-link"
+                                href="#"
+                                onClick={() => handleLinkClick('/generate-payslip')}
+                                style={{ fontWeight: activeLink === '/generate-payslip' ? 'bold' : 'normal', color: "white" }}
+                            >
+                                Manage Payslips
+                            </a>
+                        </li>
+                        <li className="nav-item">
+                            <a
+                                className="nav-link"
+                                href="#"
+                                onClick={() => handleLinkClick('/admin/payslips')}
+                                style={{ fontWeight: activeLink === '/admin/payslips' ? 'bold' : 'normal', color: "white" }}
+                            >
+                                Payslips History
+                            </a>
+                        </li>
                     </ul>
 
                     <div className="position-relative mr-3">

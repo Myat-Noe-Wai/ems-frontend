@@ -1,7 +1,7 @@
 let timeout;
 let warningTimeout;
 
-const SESSION_LIMIT = 2 * 60 * 1000; // 2 minutes
+const SESSION_LIMIT = 15 * 60 * 1000; // 2 minutes
 const WARNING_TIME = 60 * 1000; // show warning 1 min before logout
 
 export const startSessionTimer = (logoutCallback, warningCallback) => {

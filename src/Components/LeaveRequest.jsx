@@ -9,7 +9,7 @@ const LeaveRequests = () => {
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [page, setPage] = useState(0);
-  const [size, setSize] = useState(5);
+  const [size, setSize] = useState(6);
   const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
@@ -155,10 +155,10 @@ const LeaveRequests = () => {
               <td>
                 {request.status === 'Pending' && (
                   <>
-                    <button onClick={() => handleApprove(request.id)} className="btn btn-success me-2 mr-2">
+                    <button onClick={() => handleApprove(request.id)} className="btn btn-outline-success me-2 mr-2">
                       Approve
                     </button>
-                    <button onClick={() => handleReject(request.id)} className="btn btn-danger">
+                    <button onClick={() => handleReject(request.id)} className="btn btn-outline-danger">
                       Reject
                     </button>
                   </>
