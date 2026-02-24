@@ -9,7 +9,7 @@ api.interceptors.request.use(
     const token = localStorage.getItem("accessToken");
     console.log("access token in axiosConfig");
     console.log(token);
-    if (token) {
+    if (token && !config.url.includes("/v1/user/login") && !config.url.includes("/v1/user/refresh-token")) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
