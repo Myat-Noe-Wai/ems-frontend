@@ -39,7 +39,7 @@ function Login({ setIsAuthenticated }) {
       localStorage.setItem('refreshToken', res.data.refreshToken);
 
       // Navigate based on role
-      if (res.data.role === 'admin') {
+      if (res.data.role === 'ADMIN') {
         navigate('/home');
       } else {
         navigate('/emp-home');

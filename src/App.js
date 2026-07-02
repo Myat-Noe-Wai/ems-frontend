@@ -6,7 +6,7 @@ import ViewEmployeeComponent from './Components/ViewEmployeeComponent';
 import UpdateEmployeeComponent from './Components/UpdateEmployeeComponent';
 import HomeComponent from './Components/HomeComponent';
 import EmpHomeComponent from './Components/EmpHomeComponent';
-import {BrowserRouter as Router, Route, Routes, Navigate} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import JobTitleManagement from './Components/JobTitleManagement';
 import AttendanceTrackingComponent from './Components/AttendanceTrackingComponent';
 import LeaveRequest from './Components/LeaveRequest';
@@ -14,7 +14,7 @@ import EmployeeAttendance from './Components/EmployeeAttendance';
 import Register from './Components/Register';
 import Login from './Components/Login';
 import EmpHeaderComponent from './Components/EmpHeaderComponent';
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import EmployeeLeaveRequest from './Components/EmployeeLeaveRequest';
 import ViewOwnAttendance from './Components/ViewOwnAttendance';
 import GeneratePayslip from './Components/GeneratePayslip';
@@ -50,7 +50,7 @@ function App() {
               {/* Private routes that include HeaderComponent */}
               {isAuthenticated ? (
                 <>
-                  {role === 'admin' ? (
+                  {role === 'ADMIN' ? (
                     <>
                       <Route path="/home" element={
                         <div className="app-layout">
@@ -65,30 +65,30 @@ function App() {
 
                           {/* <FooterComponent /> */}
                         </div>
-                      }/>
+                      } />
                       <Route path="/" element={
                         <>
                           <div className="app-layout">
-                            <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
+                            <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole} />
                             <div className="page-content">
                               <HomeComponent />
                             </div>
                             {/* <FooterComponent /> */}
                           </div>
                         </>
-                      }/>
-                    <Route path="/jobtitles" element={
+                      } />
+                      <Route path="/jobtitles" element={
                         <>
                           <div className="app-layout">
-                            <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
+                            <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole} />
                             <div className="page-content">
                               <JobTitleManagement />
                             </div>
                             {/* <FooterComponent /> */}
                           </div>
                         </>
-                      }/>
-                    <Route path="/employees" element={
+                      } />
+                      <Route path="/employees" element={
                         <>
                           <div className="app-layout">
                             <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole} />
@@ -98,144 +98,144 @@ function App() {
                             {/* <FooterComponent /> */}
                           </div>
                         </>
-                      }/>
-                    <Route path="/add-employee" element={
+                      } />
+                      <Route path="/add-employee" element={
                         <>
-                          <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
+                          <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole} />
                           <CreateEmployeeComponent />
                           {/* <FooterComponent /> */}
                         </>
-                      }/>
-                    <Route path="/update-employee/:id" element={
+                      } />
+                      <Route path="/update-employee/:id" element={
                         <>
-                          <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
+                          <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole} />
                           <UpdateEmployeeComponent />
                           {/* <FooterComponent /> */}
                         </>
-                      }/>
-                    <Route path="/view-employee/:id" element={
+                      } />
+                      <Route path="/view-employee/:id" element={
                         <>
-                          <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
+                          <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole} />
                           <ViewEmployeeComponent />
                           {/* <FooterComponent /> */}
                         </>
-                      }/>
-                    <Route path="/attendance" element={
+                      } />
+                      <Route path="/attendance" element={
                         <>
                           <div className="app-layout">
-                            <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
+                            <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole} />
                             <div className="page-content">
                               <AttendanceTrackingComponent />
                             </div>
                             {/* <FooterComponent /> */}
                           </div>
                         </>
-                      }/>
-                    <Route path="/leave-request" element={
+                      } />
+                      <Route path="/leave-request" element={
                         <>
                           <div className="app-layout">
-                            <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
+                            <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole} />
                             <div className="page-content">
                               <LeaveRequest />
                             </div>
                             {/* <FooterComponent /> */}
                           </div>
                         </>
-                      }/>
-                    <Route path="/employee-attendance" element={
+                      } />
+                      <Route path="/employee-attendance" element={
                         <>
                           <div className="app-layout">
-                            <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
+                            <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole} />
                             <div className="page-content">
                               <EmployeeAttendance />
                             </div>
                             {/* <FooterComponent /> */}
                           </div>
                         </>
-                      }/>
+                      } />
                       <Route path="/generate-payslip" element={
                         <>
                           <div className="app-layout">
-                            <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
+                            <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole} />
                             <div className="page-content">
                               <GeneratePayslip />
                             </div>
                             {/* <FooterComponent /> */}
                           </div>
                         </>
-                      }/>
+                      } />
                       <Route path="/admin/payslips" element={
                         <>
                           <div className="app-layout">
-                            <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
+                            <HeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole} />
                             <div className="page-content">
                               <AdminPayslipList />
                             </div>
                             {/* <FooterComponent /> */}
                           </div>
                         </>
-                      }/>
+                      } />
                     </>
-                    ) : (
-                      <>
-                        <Route path="/emp-home" element={
-                          <>
-                            <div className="app-layout">
-                              <EmpHeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole} />                        
-                              <div className="page-content">
-                                <EmpHomeComponent />
-                              </div>
-                              {/* <FooterComponent /> */}
+                  ) : (
+                    <>
+                      <Route path="/emp-home" element={
+                        <>
+                          <div className="app-layout">
+                            <EmpHeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole} />
+                            <div className="page-content">
+                              <EmpHomeComponent />
                             </div>
-                          </>
-                        }/>
-                        <Route path="/" element={
-                          <>
-                            <div className="app-layout">
-                              <EmpHeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
-                              <div className="page-content">
-                                <EmpHomeComponent />
-                              </div>
-                              {/* <FooterComponent /> */}
+                            {/* <FooterComponent /> */}
+                          </div>
+                        </>
+                      } />
+                      <Route path="/" element={
+                        <>
+                          <div className="app-layout">
+                            <EmpHeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole} />
+                            <div className="page-content">
+                              <EmpHomeComponent />
                             </div>
-                          </>
-                        }/>
-                        <Route path="/times-in-out" element={
-                          <>
-                            <div className="app-layout">
-                              <EmpHeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
-                              <div className="page-content">
-                                <EmployeeAttendance />
-                              </div>
-                              {/* <FooterComponent /> */}
+                            {/* <FooterComponent /> */}
+                          </div>
+                        </>
+                      } />
+                      <Route path="/times-in-out" element={
+                        <>
+                          <div className="app-layout">
+                            <EmpHeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole} />
+                            <div className="page-content">
+                              <EmployeeAttendance />
                             </div>
-                          </>
-                        }/>
-                        <Route path="/request-leave" element={
-                          <>
-                            <div className="app-layout">
-                              <EmpHeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
-                              <div className="page-content">
-                                <EmployeeLeaveRequest />
-                              </div>
-                              {/* <FooterComponent /> */}
+                            {/* <FooterComponent /> */}
+                          </div>
+                        </>
+                      } />
+                      <Route path="/request-leave" element={
+                        <>
+                          <div className="app-layout">
+                            <EmpHeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole} />
+                            <div className="page-content">
+                              <EmployeeLeaveRequest />
                             </div>
-                          </>
-                        }/>
-                        <Route path="/my-attendance" element={
-                          <>
-                            <div className="app-layout">
-                              <EmpHeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole}/>
-                              <div className="page-content">
-                                <ViewOwnAttendance />
-                              </div>
-                              {/* <FooterComponent /> */}
+                            {/* <FooterComponent /> */}
+                          </div>
+                        </>
+                      } />
+                      <Route path="/my-attendance" element={
+                        <>
+                          <div className="app-layout">
+                            <EmpHeaderComponent setIsAuthenticated={setIsAuthenticated} setRole={setRole} />
+                            <div className="page-content">
+                              <ViewOwnAttendance />
                             </div>
-                          </>
-                        }/>
-                        {/* <Route path="/my-attendance" element={<ViewOwnAttendance />} /> */}
-                      </>
-                    )}
+                            {/* <FooterComponent /> */}
+                          </div>
+                        </>
+                      } />
+                      {/* <Route path="/my-attendance" element={<ViewOwnAttendance />} /> */}
+                    </>
+                  )}
                 </>
               ) : (
                 // Redirect to login if the user is not authenticated
